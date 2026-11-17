@@ -1,0 +1,260 @@
+{
+  "version": 1,
+  "intro": {
+    "en": "A few quick choices for Vystorm Paddock. Everything else stays on its defaults.",
+    "de": "Ein paar schnelle Entscheidungen für Vystorm Paddock. Alles andere bleibt auf Standard.",
+    "fr": "Quelques choix rapides pour Vystorm Paddock. Le reste garde ses valeurs par défaut.",
+    "it": "Alcune scelte rapide per Vystorm Paddock. Il resto resta predefinito.",
+    "pt_br": "Algumas escolhas rápidas para Vystorm Paddock. O resto fica no padrão.",
+    "ru": "Несколько быстрых решений для Vystorm Paddock. Остальное останется по умолчанию.",
+    "zh_cn": "Vystorm Paddock 的几个快速选项，其余保持默认。"
+  },
+  "questions": [
+    {
+      "id": "slots",
+      "text": {
+        "en": "How many animals may each player keep in the stable?",
+        "de": "Wie viele Tiere darf jeder Spieler im Stall halten?",
+        "fr": "Combien d’animaux par joueur à l’écurie ?",
+        "it": "Quanti animali per giocatore nella stalla?",
+        "pt_br": "Quantos animais por jogador no estábulo?",
+        "ru": "Сколько животных в конюшне у игрока?",
+        "zh_cn": "每位玩家的马厩可存放多少动物？"
+      },
+      "type": "number",
+      "target": "config.yml:stable-slots",
+      "min": 1,
+      "max": 54
+    },
+    {
+      "id": "races",
+      "text": {
+        "en": "Enable races?",
+        "de": "Rennen aktivieren?",
+        "fr": "Activer les courses ?",
+        "it": "Attivare le gare?",
+        "pt_br": "Ativar corridas?",
+        "ru": "Включить скачки?",
+        "zh_cn": "启用比赛？"
+      },
+      "type": "choice",
+      "recommended": "on",
+      "options": [
+        {
+          "id": "on",
+          "label": {
+            "en": "On",
+            "de": "An",
+            "fr": "Activé",
+            "it": "Attivo",
+            "pt_br": "Ligado",
+            "ru": "Вкл.",
+            "zh_cn": "开启"
+          },
+          "set": {
+            "config.yml:races.enabled": true
+          }
+        },
+        {
+          "id": "off",
+          "label": {
+            "en": "Off",
+            "de": "Aus",
+            "fr": "Désactivé",
+            "it": "Disattivo",
+            "pt_br": "Desligado",
+            "ru": "Выкл.",
+            "zh_cn": "关闭"
+          },
+          "set": {
+            "config.yml:races.enabled": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "training",
+      "text": {
+        "en": "Enable animal training?",
+        "de": "Tiertraining aktivieren?",
+        "fr": "Activer l’entraînement ?",
+        "it": "Attivare l’addestramento?",
+        "pt_br": "Ativar treinamento?",
+        "ru": "Включить тренировку?",
+        "zh_cn": "启用动物训练？"
+      },
+      "type": "choice",
+      "recommended": "on",
+      "options": [
+        {
+          "id": "on",
+          "label": {
+            "en": "On",
+            "de": "An",
+            "fr": "Activé",
+            "it": "Attivo",
+            "pt_br": "Ligado",
+            "ru": "Вкл.",
+            "zh_cn": "开启"
+          },
+          "set": {
+            "config.yml:training.enabled": true
+          }
+        },
+        {
+          "id": "off",
+          "label": {
+            "en": "Off",
+            "de": "Aus",
+            "fr": "Désactivé",
+            "it": "Disattivo",
+            "pt_br": "Desligado",
+            "ru": "Выкл.",
+            "zh_cn": "关闭"
+          },
+          "set": {
+            "config.yml:training.enabled": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "worlds",
+      "text": {
+        "en": "May animals be called across worlds?",
+        "de": "Dürfen Tiere über Welten hinweg gerufen werden?",
+        "fr": "Appeler les animaux entre les mondes ?",
+        "it": "Richiamare gli animali tra i mondi?",
+        "pt_br": "Chamar animais entre mundos?",
+        "ru": "Призывать животных между мирами?",
+        "zh_cn": "允许跨世界召唤动物？"
+      },
+      "type": "choice",
+      "recommended": "off",
+      "options": [
+        {
+          "id": "on",
+          "label": {
+            "en": "On",
+            "de": "An",
+            "fr": "Activé",
+            "it": "Attivo",
+            "pt_br": "Ligado",
+            "ru": "Вкл.",
+            "zh_cn": "开启"
+          },
+          "set": {
+            "config.yml:call-across-worlds": true
+          }
+        },
+        {
+          "id": "off",
+          "label": {
+            "en": "Off",
+            "de": "Aus",
+            "fr": "Désactivé",
+            "it": "Disattivo",
+            "pt_br": "Desligado",
+            "ru": "Выкл.",
+            "zh_cn": "关闭"
+          },
+          "set": {
+            "config.yml:call-across-worlds": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "trade",
+      "text": {
+        "en": "Let players sell or gift their claimed animals to each other?",
+        "de": "Spieler ihre Tiere untereinander verkaufen oder verschenken lassen?",
+        "fr": "Permettre aux joueurs de vendre ou d’offrir leurs animaux ?",
+        "it": "Permettere ai giocatori di vendere o regalare i propri animali?",
+        "pt_br": "Permitir que jogadores vendam ou deem seus animais?",
+        "ru": "Разрешить игрокам продавать и дарить своих животных?",
+        "zh_cn": "允许玩家互相出售或赠送自己的动物？"
+      },
+      "type": "choice",
+      "recommended": "on",
+      "options": [
+        {
+          "id": "on",
+          "label": {
+            "en": "On",
+            "de": "An",
+            "fr": "Activé",
+            "it": "Attivo",
+            "pt_br": "Ligado",
+            "ru": "Вкл.",
+            "zh_cn": "开启"
+          },
+          "set": {
+            "config.yml:trade.enabled": true
+          }
+        },
+        {
+          "id": "off",
+          "label": {
+            "en": "Off",
+            "de": "Aus",
+            "fr": "Désactivé",
+            "it": "Disattivo",
+            "pt_br": "Desligado",
+            "ru": "Выкл.",
+            "zh_cn": "关闭"
+          },
+          "set": {
+            "config.yml:trade.enabled": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "betting",
+      "text": {
+        "en": "Allow race betting (needs a Vault economy)?",
+        "de": "Rennwetten erlauben (braucht eine Vault-Economy)?",
+        "fr": "Autoriser les paris de course (économie Vault requise) ?",
+        "it": "Consentire le scommesse sulle corse (serve un’economia Vault)?",
+        "pt_br": "Permitir apostas em corridas (precisa de economia Vault)?",
+        "ru": "Разрешить ставки на скачки (нужна экономика Vault)?",
+        "zh_cn": "允许赛马押注（需要 Vault 经济）？"
+      },
+      "type": "choice",
+      "recommended": "on",
+      "options": [
+        {
+          "id": "on",
+          "label": {
+            "en": "On",
+            "de": "An",
+            "fr": "Activé",
+            "it": "Attivo",
+            "pt_br": "Ligado",
+            "ru": "Вкл.",
+            "zh_cn": "开启"
+          },
+          "set": {
+            "config.yml:betting.enabled": true
+          }
+        },
+        {
+          "id": "off",
+          "label": {
+            "en": "Off",
+            "de": "Aus",
+            "fr": "Désactivé",
+            "it": "Disattivo",
+            "pt_br": "Desligado",
+            "ru": "Выкл.",
+            "zh_cn": "关闭"
+          },
+          "set": {
+            "config.yml:betting.enabled": false
+          }
+        }
+      ]
+    }
+  ]
+}

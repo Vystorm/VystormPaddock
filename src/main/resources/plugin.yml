@@ -1,0 +1,34 @@
+name: VystormPaddock
+version: '${version}'
+main: at.esoren.vystormpaddock.PaddockPlugin
+api-version: '1.20.6'
+author: Esoren
+depend: [vystorm_core]
+website: https://vystorm.net
+description: Claim, protect, stable and summon your horses, donkeys, mules, llamas and camels.
+permissions:
+  vystormpaddock.trade:
+    description: Offer your claimed animals to other players and accept offers (/paddock offer|accept|decline)
+    default: true
+  vystormpaddock.use:
+    description: Claim, store and summon own animals.
+    default: true
+  vystormpaddock.bet:
+    description: Bet on riders waiting at a race start (/paddock bet; needs a Vault economy)
+    default: true
+  vystormpaddock.race:
+    description: Ride time trials on race courses.
+    default: true
+  vystormpaddock.course:
+    description: Create and edit race courses.
+    default: op
+  vystormpaddock.bypass:
+    description: Ride, hurt and manage every claimed animal; no summon cooldown.
+    default: op
+  vystormpaddock.admin:
+    description: Reload the configuration.
+    default: op
+
+  vystormpaddock.train:
+    description: Train your owned riding animal
+    default: true

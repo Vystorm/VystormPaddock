@@ -1,0 +1,13 @@
+title: 'Paddock'
+permission: vystormpaddock.use
+pages:
+  - title: 'Claim your animal'
+    text: |
+      Tamed horses become yours automatically. Look at or ride an animal and use /paddock claim; /paddock trust PLAYER lets a friend ride it.
+  - title: 'Stable and whistle'
+    text: |
+      /paddock opens your stable: store animals and bring them out anywhere. /paddock call whistles for the animal you rode last.
+  - title: 'Training and races'
+    text: |
+      Train your own mount to make it faster and jump higher, and race it on courses from the main menu.
+      Type /paddock help to see every command.

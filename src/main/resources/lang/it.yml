@@ -1,0 +1,385 @@
+# Italiano — UTF-8. Keep keys, placeholders and formatting tokens unchanged.
+usage-trust: <gray>/paddock trust|untrust PLAYER mentre guarda o guida il tuo animale.
+denied: <red>Ti manca il permesso.
+player-only: <red>Mettilo in gioco.
+reloaded: <green>Vystorm Paddock ricaricato.
+no-target: <red>Guarda un animale o guidalo.
+not-claimed: <red>Nessuno possiede questo animale. E poi /paddock claim.
+not-yours: <red>Questo animale appartiene a <yellow>{owner}</yellow>.
+already-yours: <gray>Questo animale è già tuo.
+tame-first: <red>Prendi questo animale per primo.
+claimed: <green>🐎 <yellow>{name}</yellow> è ora tuo. Solo tu e i giocatori fidati possono cavalcarlo.
+released: <gray>{name} non è più rivendicato.
+trusted: <green>{player} può ora cavalcare {name}.
+untrusted: <gray>{player} non può più cavalcare {name}.
+unknown-player: '<red>Giocatore sconosciuto: {player} <gray>Controlla l’ortografia: il giocatore deve essere già entrato nel server.'
+info: '<gold>{name}</gold> <gray>– proprietario <yellow>{owner}</yellow>, fidato: <white>{trusted}</white>, <white>{stats}'
+stored: <green>{name} è nella tua stalla ({count}/{max}). Riprenditi /paddock summon.
+stable-full: <red>La vostra stalla è piena ({max} posti).
+list-header: '<gold>La sua stalla ({count}/{max}):'
+list-entry: <gray>{number}. <yellow>{name}</yellow> <dark_gray>({type})
+list-empty: <gray>Vuoto. Conservare un animale che possiedi /paddock store.
+not-in-stable: <red>Nessun animale del genere nella vostra stalla – vedi /paddock list.
+summoned: <green>🐎 {name} è qui.
+summoned-healed: <green>🐎 {name} è qui, riposato nella stalla <gray>(+{hearts} ❤)
+cooldown: <red>Attendere {seconds} s prima di convocare di nuovo.
+world-disabled: <red>La convocazione non è consentita in questo mondo.
+died-at: <red>☠ Il tuo animale {name} è morto a {place} ({world}).
+died-killed: <red>☠ Il tuo animale {name} è stato ucciso da {player} a {place} ({world}).
+failed: <red>Questo non ha funzionato; i dettagli sono nel registro server.
+pet-managed: <gray>Questo animale è un animale domestico Vystorm – gestirlo con /pet. Paddock lo protegge solo.
+list-hover: <gray>Clicca per chiamare {name}
+info-breeding: <gray>Punteggio di allevamento <gold>{rating}/100</gold>♪ <white>{sire}</white>♪ <white>{dam}</white>, generazione
+  {generation}
+foal: <green>🐴 Nasce un foal di {sire} e {dam} e appartiene a te (partito di formazione {rating}/100).
+usage-rename: <gray>/paddock rename NAME mentre guarda o guida il tuo animale.
+renamed: <green>Il tuo animale ora si chiama <yellow>{name}</yellow>.
+call-not-found: <red>L'animale che hai usato non è vicino (scaricato, immagazzinato o andato).
+call-other-world: <red>Il tuo animale è in un altro mondo.
+called: <green>📯 {name} viene in esecuzione.
+menu-title: Stabile ({count}/{max})
+menu-name: <gold>{name}
+menu-lore:
+- <gray>{type}
+- <gray>Archiviato il {date}
+- <yellow>Clicca per chiamare
+herd-title: Herd book ({count})
+herd-lore:
+- <gray>{type}
+- '<gray>{world}: {place}'
+- <gray>{where}
+- <gray>Ultimo accesso {date}, {status}
+- '<yellow>Clicca a sinistra: mostrami la via'
+- '<yellow>Clic destro: chiamalo qui'
+- '<red>Shift + click destro: rimuovere l''entrata'
+herd-away: '{distance} distanza'
+herd-elsewhere: in un altro mondo
+herd-loaded: nelle vicinanze
+herd-unloaded: chunk non caricato
+herd-stable: <gold>Il tuo stabile
+herd-stable-lore:
+- <gray>Animali conservati con /paddock store
+- <yellow>Clicca per aprire
+herd-empty: <gray>Il tuo libro delle mandrie e' vuoto. Gli animali dichiarati appaiono qui una volta che li guidate o la loro
+  zona carichi.
+herd-disabled: <red>Il libro delle mandrie è spento su questo server.
+herd-removed: <gray>{name} è stato rimosso dal suo libro di mandria.
+herd-not-loaded: <gray>{name} è troppo lontano per chiamare – seguire la freccia invece.
+herd-other-world: <red>{name} è stato visto l'ultima volta nel mondo {world}.
+herd-tracking: <green>🧭 Seguire la freccia nella barra di azione per {name}. Fermati /paddock herd stop.
+herd-track: <gold>{arrow}</gold> <yellow>{name}</yellow> <gray>{distance}
+herd-found: <green>🐎 {name} è proprio qui.
+herd-arrived: <gray>Qui è dove {name} è stato visto l'ultima volta.
+herd-track-end: <gray>Il finder si è fermato.
+herd-track-stopped: <gray>Il finder si e' fermato.
+herd-not-tracking: <gray>Non stai seguendo nessun animale.
+vmenu-herd: Libro di Herd
+vmenu-herd-desc: Dove sono i tuoi cavalli e la strada lì
+vmenu-races: Corse di cavalli
+vmenu-races-desc: Corsi di gara, record e tempi migliori
+race-title: Corsi di gara
+race-lore:
+- '<gray>{world}: inizio al {place}'
+- <gray>{checkpoints} posti di blocco
+- '<gold>Registrazione: {record}'
+- '<gray>Il tuo meglio: {best}'
+- <yellow>Clicca per il top 10
+race-disabled: <red>Le gare sono spente su questo server.
+race-none: <gray>Non ci sono ancora corsi di gara.
+race-unknown: <red>Nessun corso di gara chiamato {course}.
+race-not-running: <gray>Non sei in gara.
+race-info: <gold>🏁 {course}</gold> <gray>– inizio a <white>{place}</white> ({world}), {checkpoints} posti di blocco. Esci
+  dal cerchio di partenza per iniziare l'orologio.
+race-top-entry: <gray>{rank}. <yellow>{player}</yellow> <white>{time}
+race-top-empty: <gray>Ancora nessuna volta – essere il primo!
+race-your-rank: '<gray>Tu: posto {rank} con {time}'
+race-ready: '<yellow>🏁 {course}: uscire dal cerchio di partenza per iniziare l''orologio'
+race-go: <green>{course} – {total} porta al traguardo.
+race-progress: <gold>⏱ {time}</gold> <gray>cancello {checkpoint}/{total}
+race-cancelled: <red>Gara su {course} annullata.
+race-timeout: '<red>Gara su {course} annullata: il tempo è scaduto.'
+race-finish: <green>🏁 {course} finito in <white>{time}</white>. I tuoi soggiorni migliori {best} (luogo {rank}).
+race-finish-best: <green>🏁 {course} finito in <white>{time}</white> – il meglio personale! Luogo {rank}.
+race-record: '<gold>🏆 {player} ha stabilito un nuovo record su {course}: {time}'
+usage-course: <gray>/paddock course create|point|undo|reset|delete COURSE, /paddock course radius COURSE BLOCKS
+course-bad-name: '<red>Nomi del corso: lettere, cifre, - e _, al massimo 24 caratteri.'
+course-exists: <red>Un corso chiamato {course} esiste già.
+course-created: <green>Corso {course} creato; l'inizio è dove ti trovi (radius {radius}). Aggiungi i punti di controllo con
+  /paddock course point {course} – l'ultimo punto è il traguardo.
+course-other-world: <red>Questo corso è nel mondo {world}.
+course-point: <green>N. {number} aggiunto al {course}. L'ultimo punto è il traguardo.
+course-no-point: <red>Solo l'inizio è lasciato.
+course-undone: <gray>Ultimo punto di {course} rimosso ({count} lasciato dopo l'inizio).
+course-radius: <green>Radius di {course} è ora {radius} blocchi.
+course-reset: <gray>Tutte le volte su {course} sono stati eliminati.
+course-deleted: <gray>Corso {course} cancellato.
+compare-ride: <red>Guida un cavallo per confrontarlo con un altro cavallo.
+compare-target: <red>Guardate un altro cavallo a portata di mano mentre cavalcate.
+compare-header: '<gold>{ridden} (ridden) → {target} (guardato). Differenze: bersaglio meno abbagliante; velocità e salto sono
+  stime.'
+compare-speed: '<gray>Velocità (blocchi/s): <white>{ridden} → {target}</white> ({delta})'
+compare-jump: '<gray>Salta (blocchi): <white>{ridden} → {target}</white> ({delta})'
+compare-health: '<gray>Salute massima (Signora): <white>{ridden} → {target}</white> ({delta})'
+menu-page-title: Stabile {page}/{pages}
+menu-previous: <yellow>Pagina precedente
+menu-next: <yellow>Pagina successiva
+menu-summary: <gold>Stabile {count}/{max} — {matches} partite
+menu-clear: '<yellow>Ricerca chiara: {search}'
+menu-no-matches: <gray>Nessun animale corrispondente
+menu-sort-oldest: '<yellow>Ordina: prima più vecchio (clicca per cambiare)'
+menu-sort-newest: '<yellow>Ordina: primo nuovo (clicca per cambiare)'
+menu-sort-name: '<yellow>Ordina: nome (clicca per cambiare)'
+menu-sort-type: '<yellow>Tipo: animale (clicca per cambiare)'
+commands:
+  paddock:
+    description: Rivendica, proteggi, stabili e convochi i tuoi cavalli; libri di mandria e corse di cavalli
+    aliases: []
+    sub:
+      train:
+        name: "train"
+        aliases: []
+        description: "Allena la tua cavalcatura nella corsa e nel salto entro limiti"
+        args:
+          exercise: "ESERCIZIO"
+      claim:
+        name: claim
+        aliases: []
+        description: Pretendiamo l'animale addomesticato che guardi o cavalca
+      release:
+        name: release
+        aliases: []
+        description: Rinuncia al tuo reclamo sull'animale
+      offer:
+        name: offer
+        aliases: []
+        description: "Offri l’animale che guardi a un giocatore"
+        args:
+          player: PLAYER
+          price: PRICE
+      accept:
+        name: accept
+        aliases: []
+        description: "Accetta l’offerta ricevuta"
+      decline:
+        name: decline
+        aliases: []
+        description: "Rifiuta l’offerta ricevuta"
+      trust:
+        name: trust
+        aliases: []
+        description: Lasciare un giocatore cavalcare e utilizzare il vostro animale
+        args:
+          player: PLAYER
+      untrust:
+        name: untrust
+        aliases: []
+        description: Riprendere l'accesso di un giocatore al vostro animale
+        args:
+          player: PLAYER
+      compare:
+        name: compare
+        aliases: []
+        description: Confronta il tuo cavallo a cavallo con il cavallo che guardi
+      info:
+        name: info
+        aliases: []
+        description: Proprietario, giocatori fidati, statistiche e allevamento dell'animale
+      rename:
+        name: rename
+        aliases: []
+        description: Date un nome al vostro animale
+        args:
+          name: NAME
+      store:
+        name: store
+        aliases: []
+        description: Metti l'animale nella tua stalla
+      list:
+        name: list
+        aliases: []
+        description: Elenca gli animali nella tua stalla
+      stable:
+        name: stable
+        aliases: []
+        description: Apri il tuo stabile; nomi di ricerca opzionalmente o tipi di animali inglesi
+        args:
+          search: SEARCH
+      summon:
+        name: summon
+        aliases: []
+        description: Porta un animale fuori dalla tua stalla
+        args:
+          animal: NUMBER|NAME
+      call:
+        name: call
+        aliases: []
+        description: Whistle per l'animale che hai guidato l'ultimo
+      herd:
+        name: herd
+        aliases: []
+        description: Herd libro dei vostri animali fuori nel mondo; stop termina la freccia guida
+        args:
+          stop: ferma
+      bet:
+        name: bet
+        aliases: []
+        description: "Scommetti su un cavaliere alla partenza: batte o manca il suo record"
+        args:
+          rider: "RIDER"
+          side: "beat|miss"
+          amount: "AMOUNT"
+      race:
+        name: race
+        aliases: []
+        description: Corsi di gara, record e tempi; interrompere la corsa
+        args:
+          course: COURSE
+      course:
+        name: course
+        aliases: []
+        description: Disattivare e modificare i corsi di gara
+        sub:
+          create:
+            name: create
+            aliases: []
+            description: Nuovo corso a partire da dove ti trovi
+            args:
+              course: COURSE
+          point:
+            name: point
+            aliases: []
+            description: Aggiungi un checkpoint dove ti trovi (l'ultimo è il traguardo)
+            args:
+              course: COURSE
+          undo:
+            name: undo
+            aliases: []
+            description: Rimuovi l'ultimo checkpoint
+            args:
+              course: COURSE
+          radius:
+            name: radius
+            aliases: []
+            description: Dimensioni dei punti di controllo (1-16 blocchi)
+            args:
+              course: COURSE
+              blocks: BLOCKS
+          reset:
+            name: reset
+            aliases: []
+            description: Elimina tutte le volte del corso
+            args:
+              course: COURSE
+          delete:
+            name: delete
+            aliases: []
+            description: Eliminare il corso
+            args:
+              course: COURSE
+      reload:
+        name: reload
+        aliases: []
+        description: Ricarica file di configurazione e lingua
+    values:
+      ride: "corsa"
+      jump: "salto"
+      status: "stato"
+      stop: ferma
+
+# Free feature release: training
+training-stopped: "Allenamento interrotto; i progressi salvati restano."
+training-requirements: "Monta il tuo cavallo, asino, mulo o cammello adulto in Sopravvivenza. Pets e mondi disabilitati sono esclusi."
+training-status: "Allenamento: velocità {speed}/{max}, salto {jump}/{max}; percorso {ride}/{rideGoal} m, salti {jumps}/{jumpGoal}; recupero {cooldown}s."
+training-usage: "Usa /paddock train ride|jump|status|stop."
+training-max: "Questo esercizio ha raggiunto il livello massimo."
+training-unavailable: "Questo animale non può svolgere l’esercizio, oppure i suoi dati richiedono una verifica."
+training-ride: "Allenamento di corsa: percorri il terreno. Teletrasporto, discesa o 10 minuti terminano la sessione."
+training-jump: "Allenamento di salto: atterra dopo salti di almeno 2 blocchi in lunghezza e 0,6 in altezza su terreno piano."
+training-level: "Miglioramento! Velocità {speed}/{max}, salto {jump}/{max}. Ora l’animale deve riposare."
+bet:
+  suspicious-party: "<gold>⚠ Controllo scommesse: {player} (gruppo di {rider}) ha vinto {amount} scommettendo che {rider} fallisca su {course}."
+  suspicious-abort: "<gold>⚠ Controllo scommesse: {player} ha vinto {amount} su «manca» perché {rider} ha interrotto la corsa su {course}."
+  open: "<gold>🏇 Scommesse aperte: {rider} è alla partenza di {course}. Batterà {target}? <yellow>/paddock bet {rider} beat|miss IMPORTO"
+  target-finish: "il traguardo"
+  closed-rider: "<gold>🏇 {count} scommesse corrono con te – montepremi {pool}. Via!"
+  closed: "<gray>🏇 Scommesse su {rider} chiuse – montepremi {pool}."
+  won: "<green>🏇 {rider} ce l’ha fatta – vinci {amount}!"
+  returned: "<gray>🏇 Scommessa su {rider} restituita: {amount}."
+  lost: "<red>🏇 La tua scommessa su {rider} è persa."
+  refund: "<gray>🏇 La corsa di {rider} non è partita – i tuoi {amount} sono tornati."
+  disabled: "<gray>Le scommesse sulle corse sono disattivate su questo server."
+  no-economy: "<red>Le scommesse richiedono un plugin di economia."
+  none-open: "<gray>Nessun cavaliere aspetta alla partenza."
+  row: "<yellow>{rider}</yellow> <gray>a {course} · montepremi {pool} · batte ×{beat} · manca ×{miss}"
+  usage: "<gray>/paddock bet [CAVALIERE beat|miss IMPORTO]"
+  placed: "<green>🏇 {amount} su {rider} – {side} (quota attuale ×{odds})."
+  on-you: "<gold>🏇 {player} scommette sulla tua corsa – montepremi {pool}."
+  side-beat: "batte il record"
+  side-miss: "lo manca"
+  word-beat: "battere"
+  word-miss: "mancare"
+  error-closed: "<red>{rider} non aspetta a nessuna partenza, o la corsa è iniziata."
+  error-self: "<red>Non puoi scommettere sulla tua corsa."
+  error-twice: "<red>Hai già scommesso su questa corsa."
+  error-amount: "<red>Le scommesse vanno da {min} a {max}."
+  error-full: "<red>Non c’è posto per altre scommesse su questa corsa."
+  error-money: "<red>Non hai così tanto denaro."
+trade:
+  disabled: "<gray>Il commercio di animali è disattivato su questo server."
+  not-owner: "<red>Solo il proprietario può offrire questo animale."
+  buyer-offline: "<red>{player} non è online."
+  self: "<red>Non puoi vendere a te stesso."
+  buyer-no-permission: "<red>{player} non può possedere animali qui."
+  bad-price: "<red>Usa un prezzo come 250 o 99.50 (senza prezzo = regalo)."
+  no-economy: "<red>I prezzi richiedono un’economia Vault; regalalo invece."
+  free: "gratis"
+  offered: "<green>Hai offerto {name} a {player} ({price})."
+  incoming: "<gold>🐴 {player} ti offre {name} ({type}) per {price}. Valido {seconds} s."
+  accept-button: "<green>[Accetta]"
+  decline-button: "<red>[Rifiuta]"
+  none: "<gray>Non hai offerte di animali aperte."
+  gone: "<red>{name} non è più disponibile."
+  too-poor: "<red>Ti servono {price}."
+  payment-failed: "<red>Il pagamento non è riuscito; nulla è cambiato."
+  bought: "<green>🐴 {name} ora è tuo (da {player}, {price})."
+  sold: "<green>🐴 {player} ha preso {name} ({price})."
+  sold-inbox: "{player} ha comprato il tuo animale {name} ({price})."
+  declined: "<gray>Hai rifiutato {name}."
+  declined-seller: "<gray>{player} ha rifiutato {name}."
+panel:
+  sort-oldest: "Prima i più vecchi"
+  sort-newest: "Prima i più recenti"
+  sort-name: "Nome"
+  sort-type: "Tipo di animale"
+  details: "Dettagli"
+  records: "I migliori 10"
+  search: "Cerca nomi o tipi di animali"
+  sort: "Ordina animali"
+  summon: "Richiama"
+  track: "Mostra la strada"
+  call: "Chiama qui"
+  remove: "Rimuovi voce"
+  remove-confirm: "Rimuovere {name} dal registro? L’animale resterà dov’è."
+  race-info: "Mostra il percorso in chat"
+  page: "Pagina {page}/{pages}"
+  entries: "{count} voci"
+  type: "Tipo di animale"
+  stored: "In stalla dal"
+  world: "Mondo"
+  place: "Posizione"
+  seen: "Ultimo avvistamento"
+  status: "Stato"
+  checkpoints: "Punti di controllo"
+  record: "Record"
+  best: "Il tuo miglior tempo"
+  none: "Nessuno"
+  types:
+    horse: "Cavallo"
+    donkey: "Asino"
+    mule: "Mulo"
+    llama: "Lama"
+    trader_llama: "Lama del mercante"
+    camel: "Dromedario"
+    skeleton_horse: "Cavallo scheletro"
+    zombie_horse: "Cavallo zombi"
+    other: "Animale"

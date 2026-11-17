@@ -1,0 +1,13 @@
+title: 'Paddock'
+permission: vystormpaddock.use
+pages:
+  - title: 'Réclamer un animal'
+    text: |
+      Les chevaux apprivoisés sont à vous automatiquement. /paddock claim sur un animal ; /paddock trust PLAYER laisse un ami le monter.
+  - title: 'Écurie et sifflet'
+    text: |
+      /paddock ouvre votre écurie : rangez vos animaux et faites-les sortir partout. /paddock call siffle le dernier monté.
+  - title: 'Entraînement et courses'
+    text: |
+      Entraînez votre monture pour qu’elle soit plus rapide et faites des courses depuis le menu.
+      Tapez /paddock help pour voir toutes les commandes.

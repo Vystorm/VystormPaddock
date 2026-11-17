@@ -1,0 +1,13 @@
+title: 'Koppel'
+permission: vystormpaddock.use
+pages:
+  - title: 'Tier beanspruchen'
+    text: |
+      Gezähmte Pferde gehören automatisch dir. Schau ein Tier an oder reite es und nutze /paddock claim; /paddock trust PLAYER lässt Freunde reiten.
+  - title: 'Stall und Pfeife'
+    text: |
+      /paddock öffnet deinen Stall: Tiere einlagern und überall wieder herausholen. /paddock call pfeift das zuletzt gerittene Tier herbei.
+  - title: 'Training und Rennen'
+    text: |
+      Trainiere dein Reittier, damit es schneller wird und höher springt, und reite Rennen über das Hauptmenü.
+      Mit /paddock help siehst du alle Befehle.

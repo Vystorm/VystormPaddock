@@ -1,0 +1,13 @@
+title: '马场'
+permission: vystormpaddock.use
+pages:
+  - title: '认领动物'
+    text: |
+      驯服的马会自动归你。看向或骑乘动物并输入 /paddock claim；/paddock trust PLAYER 让朋友骑乘。
+  - title: '马厩与口哨'
+    text: |
+      /paddock 打开马厩：存放动物并随处召出。/paddock call 呼唤你最后骑的动物。
+  - title: '训练与比赛'
+    text: |
+      训练坐骑让它更快、跳得更高，并在主菜单中参加比赛。
+      输入 /paddock help 查看全部命令。

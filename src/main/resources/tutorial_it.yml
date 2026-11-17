@@ -1,0 +1,13 @@
+title: 'Recinto'
+permission: vystormpaddock.use
+pages:
+  - title: 'Reclamare un animale'
+    text: |
+      I cavalli addomesticati diventano tuoi. /paddock claim su un animale; /paddock trust PLAYER lo fa cavalcare a un amico.
+  - title: 'Stalla e fischio'
+    text: |
+      /paddock apre la tua stalla: riponi gli animali e richiamali ovunque. /paddock call fischia l’ultimo cavalcato.
+  - title: 'Allenamento e gare'
+    text: |
+      Allena la cavalcatura perché sia più veloce e partecipa alle gare dal menu.
+      Scrivi /paddock help per vedere tutti i comandi.

@@ -1,0 +1,385 @@
+usage-trust: "<gray>/paddock trust|untrust PLAYER while looking at or riding your animal."
+denied: "<red>You lack permission for this."
+player-only: "<red>Run this in game."
+reloaded: "<green>Vystorm Paddock reloaded."
+no-target: "<red>Look at an animal or ride it."
+not-claimed: "<red>Nobody owns this animal. Tame it, then /paddock claim."
+not-yours: "<red>This animal belongs to <yellow>{owner}</yellow>."
+already-yours: "<gray>This animal is already yours."
+tame-first: "<red>Tame this animal yourself first."
+claimed: "<green>🐎 <yellow>{name}</yellow> is now yours. Only you and trusted players can ride it."
+released: "<gray>{name} is no longer claimed."
+trusted: "<green>{player} may now ride {name}."
+untrusted: "<gray>{player} may no longer ride {name}."
+unknown-player: "<red>Unknown player: {player} <gray>Check the spelling – the player must have joined this server before."
+info: "<gold>{name}</gold> <gray>– owner <yellow>{owner}</yellow>, trusted: <white>{trusted}</white>, <white>{stats}"
+stored: "<green>{name} is in your stable ({count}/{max}). Get it back with /paddock summon."
+stable-full: "<red>Your stable is full ({max} places)."
+list-header: "<gold>Your stable ({count}/{max}):"
+list-entry: "<gray>{number}. <yellow>{name}</yellow> <dark_gray>({type})"
+list-empty: "<gray>Empty. Store an animal you own with /paddock store."
+not-in-stable: "<red>No such animal in your stable – see /paddock list."
+summoned: "<green>🐎 {name} is here."
+summoned-healed: "<green>🐎 {name} is here, rested in the stable <gray>(+{hearts} ❤)"
+cooldown: "<red>Wait {seconds} s before summoning again."
+world-disabled: "<red>Summoning is not allowed in this world."
+died-at: "<red>☠ Your animal {name} has died at {place} ({world})."
+died-killed: "<red>☠ Your animal {name} was killed by {player} at {place} ({world})."
+failed: "<red>That did not work; details are in the server log."
+pet-managed: "<gray>This animal is a Vystorm pet – manage it with /pet. Paddock only protects it."
+list-hover: "<gray>Click to summon {name}"
+info-breeding: "<gray>Breeding score <gold>{rating}/100</gold>, sire <white>{sire}</white>, dam <white>{dam}</white>, generation {generation}"
+foal: "<green>🐴 A foal of {sire} and {dam} is born and belongs to you (breeding score {rating}/100)."
+usage-rename: "<gray>/paddock rename NAME while looking at or riding your animal."
+renamed: "<green>Your animal is now called <yellow>{name}</yellow>."
+call-not-found: "<red>The animal you last rode is not nearby (unloaded, stored or gone)."
+call-other-world: "<red>Your animal is in another world."
+called: "<green>📯 {name} comes running."
+menu-title: "Stable ({count}/{max})"
+menu-name: "<gold>{name}"
+menu-lore:
+  - "<gray>{type}"
+  - "<gray>Stored {date}"
+  - "<yellow>Click to summon"
+herd-title: "Herd book ({count})"
+herd-lore:
+  - "<gray>{type}"
+  - "<gray>{world}: {place}"
+  - "<gray>{where}"
+  - "<gray>Last seen {date}, {status}"
+  - "<yellow>Left click: show me the way"
+  - "<yellow>Right click: call it here"
+  - "<red>Shift + right click: remove entry"
+herd-away: "{distance} away"
+herd-elsewhere: "in another world"
+herd-loaded: "nearby now"
+herd-unloaded: "chunk not loaded"
+herd-stable: "<gold>Your stable"
+herd-stable-lore:
+  - "<gray>Animals stored with /paddock store"
+  - "<yellow>Click to open"
+herd-empty: "<gray>Your herd book is empty. Claimed animals appear here once you ride them or their area loads."
+herd-disabled: "<red>The herd book is switched off on this server."
+herd-removed: "<gray>{name} was removed from your herd book."
+herd-not-loaded: "<gray>{name} is too far away to call – follow the arrow instead."
+herd-other-world: "<red>{name} was last seen in the world {world}."
+herd-tracking: "<green>🧭 Follow the arrow in your action bar to {name}. Stop with /paddock herd stop."
+herd-track: "<gold>{arrow}</gold> <yellow>{name}</yellow> <gray>{distance}"
+herd-found: "<green>🐎 {name} is right here."
+herd-arrived: "<gray>This is where {name} was last seen."
+herd-track-end: "<gray>The way-finder has stopped."
+herd-track-stopped: "<gray>Way-finder stopped."
+herd-not-tracking: "<gray>You are not following any animal."
+vmenu-herd: "Herd book"
+vmenu-herd-desc: "Where your horses are and the way there"
+vmenu-races: "Horse races"
+vmenu-races-desc: "Race courses, records and your best times"
+race-title: "Race courses"
+race-lore:
+  - "<gray>{world}: start at {place}"
+  - "<gray>{checkpoints} checkpoints"
+  - "<gold>Record: {record}"
+  - "<gray>Your best: {best}"
+  - "<yellow>Click for the top 10"
+race-disabled: "<red>Races are switched off on this server."
+race-none: "<gray>There are no race courses yet."
+race-unknown: "<red>No race course called {course}."
+race-not-running: "<gray>You are not in a race."
+race-info: "<gold>🏁 {course}</gold> <gray>– start at <white>{place}</white> ({world}), {checkpoints} checkpoints. Ride out of the start circle to start the clock."
+race-top-entry: "<gray>{rank}. <yellow>{player}</yellow> <white>{time}"
+race-top-empty: "<gray>No times yet – be the first!"
+race-your-rank: "<gray>You: place {rank} with {time}"
+race-ready: "<yellow>🏁 {course}: ride out of the start circle to start the clock"
+race-go: "<green>🏁 Go! {course} – {total} gates to the finish."
+race-progress: "<gold>⏱ {time}</gold> <gray>gate {checkpoint}/{total}"
+race-cancelled: "<red>Race on {course} cancelled."
+race-timeout: "<red>Race on {course} cancelled: time is up."
+race-finish: "<green>🏁 {course} finished in <white>{time}</white>. Your best stays {best} (place {rank})."
+race-finish-best: "<green>🏁 {course} finished in <white>{time}</white> – personal best! Place {rank}."
+race-record: "<gold>🏆 {player} set a new record on {course}: {time}"
+usage-course: "<gray>/paddock course create|point|undo|reset|delete COURSE, /paddock course radius COURSE BLOCKS"
+course-bad-name: "<red>Course names: letters, digits, - and _, at most 24 characters."
+course-exists: "<red>A course called {course} already exists."
+course-created: "<green>Course {course} created; the start is where you stand (radius {radius}). Add checkpoints with /paddock course point {course} – the last point is the finish."
+course-other-world: "<red>This course is in the world {world}."
+course-point: "<green>Point {number} added to {course}. The last point is the finish."
+course-no-point: "<red>Only the start is left."
+course-undone: "<gray>Last point of {course} removed ({count} left after the start)."
+course-radius: "<green>Radius of {course} is now {radius} blocks."
+course-reset: "<gray>All times on {course} were deleted."
+course-deleted: "<gray>Course {course} deleted."
+
+# /paddock through Vystorm Core: description, help and tab completion per player. "aliases" under commands.paddock are
+# extra root commands (server-wide, the admin chooses which languages: Core config commands.localized-aliases); "name"
+# and "aliases" of a subcommand are accepted in every language, English always works.
+compare-ride: "<red>Ride a horse to compare it with another horse."
+compare-target: "<red>Look at another horse within reach while riding."
+compare-header: "<gold>{ridden} (ridden) → {target} (looked at). Differences: target minus ridden; speed and jump are estimates."
+compare-speed: "<gray>Speed (blocks/s): <white>{ridden} → {target}</white> ({delta})"
+compare-jump: "<gray>Jump (blocks): <white>{ridden} → {target}</white> ({delta})"
+compare-health: "<gray>Max health (❤): <white>{ridden} → {target}</white> ({delta})"
+
+menu-page-title: "Stable {page}/{pages}"
+menu-previous: "<yellow>Previous page"
+menu-next: "<yellow>Next page"
+menu-summary: "<gold>Stable {count}/{max} — {matches} matches"
+menu-clear: "<yellow>Clear search: {search}"
+menu-no-matches: "<gray>No matching animals"
+menu-sort-oldest: "<yellow>Sort: oldest first (click to change)"
+menu-sort-newest: "<yellow>Sort: newest first (click to change)"
+menu-sort-name: "<yellow>Sort: name (click to change)"
+menu-sort-type: "<yellow>Sort: animal type (click to change)"
+
+commands:
+  paddock:
+    description: "Claim, protect, stable and summon your horses; herd book and horse races"
+    aliases: []
+    sub:
+      train:
+        name: "train"
+        aliases: []
+        description: "Train your own mount with bounded riding and jumping exercises"
+        args:
+          exercise: "EXERCISE"
+      claim:
+        name: claim
+        aliases: []
+        description: "Claim the tamed animal you look at or ride"
+      release:
+        name: release
+        aliases: []
+        description: "Give up your claim on the animal"
+      offer:
+        name: offer
+        aliases: []
+        description: "Offer the animal you look at to a player"
+        args:
+          player: PLAYER
+          price: PRICE
+      accept:
+        name: accept
+        aliases: []
+        description: "Accept the animal offer you received"
+      decline:
+        name: decline
+        aliases: []
+        description: "Decline the animal offer you received"
+      trust:
+        name: trust
+        aliases: []
+        description: "Let a player ride and use your animal"
+        args:
+          player: PLAYER
+      untrust:
+        name: untrust
+        aliases: []
+        description: "Take back a player's access to your animal"
+        args:
+          player: PLAYER
+      compare:
+        name: compare
+        aliases: []
+        description: "Compare your ridden horse with the horse you look at"
+      info:
+        name: info
+        aliases: []
+        description: "Owner, trusted players, stats and breeding of the animal"
+      rename:
+        name: rename
+        aliases: []
+        description: "Give your animal a name"
+        args:
+          name: NAME
+      store:
+        name: store
+        aliases: []
+        description: "Put the animal into your stable"
+      list:
+        name: list
+        aliases: []
+        description: "List the animals in your stable"
+      stable:
+        name: stable
+        aliases: []
+        description: "Open your stable; optionally search names or English animal types"
+        args:
+          search: "SEARCH"
+      summon:
+        name: summon
+        aliases: []
+        description: "Bring an animal out of your stable"
+        args:
+          animal: "NUMBER|NAME"
+      call:
+        name: call
+        aliases: []
+        description: "Whistle for the animal you rode last"
+      herd:
+        name: herd
+        aliases: []
+        description: "Herd book of your animals out in the world; stop ends the guide arrow"
+        args:
+          stop: stop
+      bet:
+        name: bet
+        aliases: []
+        description: "Bet on a rider waiting at a race start: beat or miss their best time"
+        args:
+          rider: "RIDER"
+          side: "beat|miss"
+          amount: "AMOUNT"
+      race:
+        name: race
+        aliases: []
+        description: "Race courses, records and your times; stop ends your run"
+        args:
+          course: "COURSE|stop"
+      course:
+        name: course
+        aliases: []
+        description: "Lay out and edit race courses"
+        sub:
+          create:
+            name: create
+            aliases: []
+            description: "New course starting where you stand"
+            args:
+              course: COURSE
+          point:
+            name: point
+            aliases: []
+            description: "Add a checkpoint where you stand (the last one is the finish)"
+            args:
+              course: COURSE
+          undo:
+            name: undo
+            aliases: []
+            description: "Remove the last checkpoint"
+            args:
+              course: COURSE
+          radius:
+            name: radius
+            aliases: []
+            description: "Size of the checkpoints (1-16 blocks)"
+            args:
+              course: COURSE
+              blocks: BLOCKS
+          reset:
+            name: reset
+            aliases: []
+            description: "Delete all times of the course"
+            args:
+              course: COURSE
+          delete:
+            name: delete
+            aliases: []
+            description: "Delete the course"
+            args:
+              course: COURSE
+      reload:
+        name: reload
+        aliases: []
+        description: "Reload config and language files"
+    values:
+      ride: "ride"
+      jump: "jump"
+      status: "status"
+      stop: stop
+
+# Free feature release: training
+training-stopped: "Training stopped; saved progress remains."
+training-requirements: "Ride your own adult horse, donkey, mule or camel in Survival. Pets and disabled worlds cannot train."
+training-status: "Training: speed {speed}/{max}, jump {jump}/{max}; riding {ride}/{rideGoal} m, jumps {jumps}/{jumpGoal}; recovery {cooldown}s."
+training-usage: "Use /paddock train ride|jump|status|stop."
+training-max: "This exercise has reached its maximum training level."
+training-unavailable: "This animal cannot perform that exercise, or its training data needs administrator attention."
+training-ride: "Riding exercise started: travel on the ground. Teleporting, dismounting or 10 minutes ends the session."
+training-jump: "Jump exercise started: land real jumps at least 2 blocks long and 0.6 blocks high on level ground."
+training-level: "Training improved! Speed {speed}/{max}, jump {jump}/{max}. The animal now needs recovery time."
+bet:
+  suspicious-party: "<gold>⚠ Bet check: {player} (party of {rider}) won {amount} betting that {rider} misses on {course}."
+  suspicious-abort: "<gold>⚠ Bet check: {player} won {amount} on \"miss\" because {rider} cancelled the run on {course}."
+  open: "<gold>🏇 Bets open: {rider} is at the start of {course}. Will they beat {target}? <yellow>/paddock bet {rider} beat|miss AMOUNT"
+  target-finish: "a finish"
+  closed-rider: "<gold>🏇 {count} bets ride with you – pool {pool}. Go!"
+  closed: "<gray>🏇 Bets on {rider} are closed – pool {pool}."
+  won: "<green>🏇 {rider} came through – you win {amount}!"
+  returned: "<gray>🏇 Bet on {rider} returned: {amount}."
+  lost: "<red>🏇 Your bet on {rider} is lost."
+  refund: "<gray>🏇 The run of {rider} did not start – your {amount} are back."
+  disabled: "<gray>Race betting is switched off on this server."
+  no-economy: "<red>Race betting needs an economy plugin."
+  none-open: "<gray>No rider is waiting at a start right now."
+  row: "<yellow>{rider}</yellow> <gray>at {course} · pool {pool} · beat ×{beat} · miss ×{miss}"
+  usage: "<gray>/paddock bet [RIDER beat|miss AMOUNT]"
+  placed: "<green>🏇 {amount} on {rider} – {side} (current odds ×{odds})."
+  on-you: "<gold>🏇 {player} bet on your run – pool {pool}."
+  side-beat: "beats the best time"
+  side-miss: "misses it"
+  word-beat: "beat"
+  word-miss: "miss"
+  error-closed: "<red>{rider} is not waiting at a race start, or the run has begun."
+  error-self: "<red>You cannot bet on your own run."
+  error-twice: "<red>You already bet on this run."
+  error-amount: "<red>Bets are from {min} to {max}."
+  error-full: "<red>This run has no room for more bets."
+  error-money: "<red>You do not have that much money."
+trade:
+  disabled: "<gray>Animal trade is switched off on this server."
+  not-owner: "<red>Only the owner can offer this animal."
+  buyer-offline: "<red>{player} is not online."
+  self: "<red>You cannot sell to yourself."
+  buyer-no-permission: "<red>{player} cannot own animals here."
+  bad-price: "<red>Use a price like 250 or 99.50 (no price = gift)."
+  no-economy: "<red>Prices need a Vault economy; offer it as a gift instead."
+  free: "free"
+  offered: "<green>You offered {name} to {player} ({price})."
+  incoming: "<gold>🐴 {player} offers you {name} ({type}) for {price}. Valid for {seconds} s."
+  accept-button: "<green>[Accept]"
+  decline-button: "<red>[Decline]"
+  none: "<gray>You have no open animal offer."
+  gone: "<red>{name} is no longer available."
+  too-poor: "<red>You need {price}."
+  payment-failed: "<red>The payment did not go through; nothing changed."
+  bought: "<green>🐴 {name} is yours now (from {player}, {price})."
+  sold: "<green>🐴 {player} took {name} ({price})."
+  sold-inbox: "{player} bought your animal {name} ({price})."
+  declined: "<gray>You declined {name}."
+  declined-seller: "<gray>{player} declined {name}."
+panel:
+  sort-oldest: "Oldest first"
+  sort-newest: "Newest first"
+  sort-name: "Name"
+  sort-type: "Animal type"
+  details: "Details"
+  records: "Top 10"
+  search: "Search names or animal types"
+  sort: "Sort animals"
+  summon: "Summon"
+  track: "Show the way"
+  call: "Call here"
+  remove: "Remove entry"
+  remove-confirm: "Remove {name} from your herd book? The animal stays where it is."
+  race-info: "Show course in chat"
+  page: "Page {page}/{pages}"
+  entries: "{count} entries"
+  type: "Animal type"
+  stored: "Stored"
+  world: "World"
+  place: "Location"
+  seen: "Last seen"
+  status: "Status"
+  checkpoints: "Checkpoints"
+  record: "Record"
+  best: "Your best"
+  none: "None"
+  types:
+    horse: "Horse"
+    donkey: "Donkey"
+    mule: "Mule"
+    llama: "Llama"
+    trader_llama: "Trader llama"
+    camel: "Camel"
+    skeleton_horse: "Skeleton horse"
+    zombie_horse: "Zombie horse"
+    other: "Animal"

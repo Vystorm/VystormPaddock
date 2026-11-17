@@ -1,0 +1,89 @@
+# Vystorm Paddock
+# Covers horses, donkeys, mules, llamas, trader llamas, camels, skeleton and zombie horses.
+
+# Taming an animal claims it for the player automatically. Already tamed animals: /paddock claim
+auto-claim-on-tame: true
+
+# Claimed animals are always safe from other players. true also blocks fall, fire, mob damage etc. (void still kills).
+protect-from-environment: false
+
+# How many animals fit into a player's stable. Per player or group: permission vystormpaddock.slots.<n> (largest wins).
+stable-slots: 3
+
+summon-cooldown-seconds: 10
+
+# Animals heal while they stand in the stable: evenly over this many minutes, fully after it (0 = no healing).
+stable-rest-minutes: 10
+
+# How far away a looked-at animal may be for /paddock commands (blocks).
+reach: 6
+
+# No summoning in these worlds (e.g. minigame or event worlds).
+disabled-worlds: []
+
+# Ride the animal right away when it is summoned (only with a saddle).
+mount-on-summon: true
+
+# /paddock call whistles the animal you last rode to you (if its chunk is loaded). Also across worlds?
+call-across-worlds: false
+
+# Foals of two of your own claimed animals are claimed for you automatically.
+claim-foals: true
+
+# Vystorm Pets: if installed, horses, donkeys, llamas and camels belong to Pets (taming, storing, summoning).
+# Paddock then only protects them for their pet owner; mules, trader llamas and undead horses stay with Paddock.
+
+# Herd book (/paddock herd): remembers where each of your claimed animals was last seen and shows you the way there.
+herd-book:
+  enabled: true
+  # How long the action bar compass points the way before it stops by itself.
+  track-seconds: 120
+
+# Time trials on horseback (/paddock race). Courses are built by players with vystormpaddock.course (/paddock course).
+races:
+  enabled: true
+  # A run that takes longer than this is cancelled.
+  max-minutes: 10
+  # Radius of the start, checkpoints and finish of new courses (blocks, 1-16). Change later: /paddock course radius
+  default-radius: 4
+  # Tell everyone online when a course record is broken.
+  announce-records: true
+  # Show the next checkpoint to the rider with particles.
+  show-checkpoints: true
+
+training:
+  enabled: true
+  max-level: 5
+  ride-metres: 300
+  jumps: 12
+  cooldown-seconds: 60
+  # Total training bonuses are capped at +0.05 speed and +0.15 jump strength.
+  speed-per-level: 0.005
+  jump-per-level: 0.02
+
+betting:
+  # Race betting (needs a Vault economy): while a rider waits in a course's start circle, players nearby bet whether
+  # the rider beats their own best time there (no best yet = finishing counts). /paddock bet <rider> beat|miss <amount>;
+  # /paddock bet lists open books. Leaving the circle starts the run and closes the bets. The pool minus the house cut
+  # goes to the winning side by stake; if one side is empty everyone gets their stake back. Riders cannot bet on
+  # themselves. Open bets are refunded when the rider gets off, logs out or the server stops.
+  enabled: true
+  min: 10
+  max: 1000
+  # Share the house keeps from a decided pool (0-0.5).
+  house-cut: 0.05
+  # Bets per run (1-200).
+  max-bets: 20
+  # Players within this distance hear that bets are open (4-512 blocks).
+  announce-radius: 48
+  # Write every settled bet to data/bet-log.csv. Winning "miss" bets by the rider's party or on a cancelled run are
+  # marked there, in the server log and to admins online (vystormpaddock.admin). Nothing is blocked; admins decide.
+  log: true
+
+trade:
+  # Animal trade: /paddock offer <player> [price] offers the claimed animal you look at or ride to another player.
+  # They accept with a click (/paddock accept) or decline. A price needs a Vault economy; without a price it is a gift.
+  # The new owner gets the claim, trusted players are cleared.
+  enabled: true
+  # How long an offer stays open (15-3600 seconds).
+  offer-seconds: 120

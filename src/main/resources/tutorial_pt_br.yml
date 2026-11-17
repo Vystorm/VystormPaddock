@@ -1,0 +1,13 @@
+title: 'Estábulo'
+permission: vystormpaddock.use
+pages:
+  - title: 'Reivindicar um animal'
+    text: |
+      Cavalos domados são seus automaticamente. /paddock claim num animal; /paddock trust PLAYER deixa um amigo montar.
+  - title: 'Estábulo e apito'
+    text: |
+      /paddock abre seu estábulo: guarde animais e traga-os em qualquer lugar. /paddock call chama o último montado.
+  - title: 'Treino e corridas'
+    text: |
+      Treine sua montaria para ficar mais rápida e participe de corridas pelo menu.
+      Digite /paddock help para ver todos os comandos.

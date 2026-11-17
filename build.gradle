@@ -1,0 +1,35 @@
+plugins { id 'java' }
+group = 'at.esoren'
+version = '1.17.0'
+repositories {
+    mavenCentral()
+    maven { url = 'https://repo.papermc.io/repository/maven-public/' }
+}
+java { toolchain.languageVersion = JavaLanguageVersion.of(25) }
+dependencies {
+    compileOnly files(providers.gradleProperty('vystormCoreJar').getOrElse('libs/Vystorm_Core.jar'))
+    testImplementation files(providers.gradleProperty('vystormCoreJar').getOrElse('libs/Vystorm_Core.jar'))
+    compileOnly 'io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT'
+    testImplementation 'io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT'
+    testImplementation 'org.junit.jupiter:junit-jupiter:6.0.1'
+    testImplementation 'org.mockito:mockito-core:5.20.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:6.0.1'
+}
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 21 }
+def compatLibraries = file(providers.gradleProperty('paper1206Libraries').getOrElse((System.getProperty('user.home') + '/source/tools/smoke-1206/libraries')))
+tasks.register('compat1206', JavaCompile) {
+    group = 'verification'
+    description = 'Compiles main sources against Paper 1.20.6 with Java 21 bytecode.'
+    source = sourceSets.main.java
+    classpath = files(providers.gradleProperty('vystormCoreJar').getOrElse('libs/Vystorm_Core.jar')) + fileTree(compatLibraries) { include '**/*.jar' }
+    destinationDirectory = layout.buildDirectory.dir('classes/java/compat1206')
+    javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(25) }
+}
+check { dependsOn tasks.named('compat1206') }
+test {
+    useJUnitPlatform()
+    systemProperty 'paper1206Libraries', compatLibraries.absolutePath
+    systemProperty 'vystormCoreJar', file(providers.gradleProperty('vystormCoreJar').getOrElse('libs/Vystorm_Core.jar')).absolutePath
+}
+processResources { inputs.property('version', project.version); filesMatching('plugin.yml') { expand(version: project.version) } }
+jar { archiveFileName = "VystormPaddock-${project.version}.jar"; from('LICENSE'); from('PROVENANCE.md') }

@@ -1,0 +1,385 @@
+usage-trust: "<gray>看着或骑着你的动物时使用 /paddock trust|untrust PLAYER。"
+denied: "<red>你没有权限执行此操作。"
+player-only: "<red>请在游戏内执行此命令。"
+reloaded: "<green>Vystorm Paddock 已重新加载。"
+no-target: "<red>请看着一只动物或骑上它。"
+not-claimed: "<red>这只动物没有主人。先驯服它，然后使用 /paddock claim。"
+not-yours: "<red>这只动物属于 <yellow>{owner}</yellow>。"
+already-yours: "<gray>这只动物已经是你的了。"
+tame-first: "<red>请先亲自驯服这只动物。"
+claimed: "<green>🐎 <yellow>{name}</yellow> 现在归你了。只有你和受信任的玩家可以骑乘它。"
+released: "<gray>{name} 已不再被认领。"
+trusted: "<green>{player} 现在可以骑乘 {name}。"
+untrusted: "<gray>{player} 不能再骑乘 {name}。"
+unknown-player: "<red>未知玩家：{player} <gray>请检查拼写——该玩家必须曾进入过本服务器。"
+info: "<gold>{name}</gold> <gray>– 主人 <yellow>{owner}</yellow>，受信任：<white>{trusted}</white>，<white>{stats}"
+stored: "<green>{name} 已存入你的马厩（{count}/{max}）。使用 /paddock summon 取回。"
+stable-full: "<red>你的马厩已满（{max} 个位置）。"
+list-header: "<gold>你的马厩（{count}/{max}）："
+list-entry: "<gray>{number}. <yellow>{name}</yellow> <dark_gray>({type})"
+list-empty: "<gray>空的。使用 /paddock store 存入一只你拥有的动物。"
+not-in-stable: "<red>你的马厩里没有这只动物 – 查看 /paddock list。"
+summoned: "<green>🐎 {name} 来了。"
+summoned-healed: "<green>🐎 {name} 来了，已在马厩中休息恢复 <gray>（+{hearts} ❤）"
+cooldown: "<red>请等待 {seconds} 秒后再召唤。"
+world-disabled: "<red>此世界不允许召唤。"
+died-at: "<red>☠ 你的动物 {name} 死于 {place}（{world}）。"
+died-killed: "<red>☠ 你的动物 {name} 在 {place}（{world}）被 {player} 杀死了。"
+failed: "<red>操作失败，详情见服务器日志。"
+pet-managed: "<gray>这只动物是 Vystorm 宠物 – 请用 /pet 管理。Paddock 只负责保护它。"
+list-hover: "<gray>点击召唤 {name}"
+info-breeding: "<gray>繁殖评分 <gold>{rating}/100</gold>，父本 <white>{sire}</white>，母本 <white>{dam}</white>，第 {generation} 代"
+foal: "<green>🐴 {sire} 和 {dam} 的幼崽出生了，归你所有（繁殖评分 {rating}/100）。"
+usage-rename: "<gray>看着或骑着你的动物时使用 /paddock rename NAME。"
+renamed: "<green>你的动物现在叫 <yellow>{name}</yellow>。"
+call-not-found: "<red>你上次骑乘的动物不在附近（未加载、已存入马厩或已消失）。"
+call-other-world: "<red>你的动物在另一个世界。"
+called: "<green>📯 {name} 跑过来了。"
+menu-title: "马厩（{count}/{max}）"
+menu-name: "<gold>{name}"
+menu-lore:
+  - "<gray>{type}"
+  - "<gray>存入于 {date}"
+  - "<yellow>点击召唤"
+herd-title: "畜群簿（{count}）"
+herd-lore:
+  - "<gray>{type}"
+  - "<gray>{world}：{place}"
+  - "<gray>{where}"
+  - "<gray>最后出现于 {date}，{status}"
+  - "<yellow>左键：为我指路"
+  - "<yellow>右键：召唤到这里"
+  - "<red>Shift + 右键：删除条目"
+herd-away: "距离 {distance}"
+herd-elsewhere: "在另一个世界"
+herd-loaded: "就在附近"
+herd-unloaded: "区块未加载"
+herd-stable: "<gold>你的马厩"
+herd-stable-lore:
+  - "<gray>用 /paddock store 存入的动物"
+  - "<yellow>点击打开"
+herd-empty: "<gray>你的畜群簿是空的。已认领的动物在你骑乘它们或其所在区域加载后会出现在这里。"
+herd-disabled: "<red>本服务器已关闭畜群簿。"
+herd-removed: "<gray>{name} 已从你的畜群簿中删除。"
+herd-not-loaded: "<gray>{name} 太远了，无法召唤 – 请跟随箭头前往。"
+herd-other-world: "<red>{name} 最后出现在世界 {world}。"
+herd-tracking: "<green>🧭 跟随动作栏中的箭头前往 {name}。使用 /paddock herd stop 停止。"
+herd-track: "<gold>{arrow}</gold> <yellow>{name}</yellow> <gray>{distance}"
+herd-found: "<green>🐎 {name} 就在这里。"
+herd-arrived: "<gray>这里是最后一次看到 {name} 的地方。"
+herd-track-end: "<gray>寻路已结束。"
+herd-track-stopped: "<gray>寻路已停止。"
+herd-not-tracking: "<gray>你没有在追踪任何动物。"
+vmenu-herd: "畜群簿"
+vmenu-herd-desc: "你的马在哪里，以及怎么去"
+vmenu-races: "赛马"
+vmenu-races-desc: "赛道、纪录和你的最佳成绩"
+race-title: "赛道"
+race-lore:
+  - "<gray>{world}：起点 {place}"
+  - "<gray>{checkpoints} 个检查点"
+  - "<gold>纪录：{record}"
+  - "<gray>你的最佳：{best}"
+  - "<yellow>点击查看前 10 名"
+race-disabled: "<red>本服务器已关闭赛马。"
+race-none: "<gray>还没有赛道。"
+race-unknown: "<red>没有名为 {course} 的赛道。"
+race-not-running: "<gray>你不在比赛中。"
+race-info: "<gold>🏁 {course}</gold> <gray>– 起点 <white>{place}</white>（{world}），{checkpoints} 个检查点。骑出起点圈即开始计时。"
+race-top-entry: "<gray>{rank}. <yellow>{player}</yellow> <white>{time}"
+race-top-empty: "<gray>还没有成绩 – 来当第一个吧！"
+race-your-rank: "<gray>你：第 {rank} 名，用时 {time}"
+race-ready: "<yellow>🏁 {course}：骑出起点圈即开始计时"
+race-go: "<green>🏁 出发！{course} – 距终点共 {total} 道关门。"
+race-progress: "<gold>⏱ {time}</gold> <gray>关门 {checkpoint}/{total}"
+race-cancelled: "<red>{course} 的比赛已取消。"
+race-timeout: "<red>{course} 的比赛已取消：时间到。"
+race-finish: "<green>🏁 完成 {course}，用时 <white>{time}</white>。你的最佳成绩仍为 {best}（第 {rank} 名）。"
+race-finish-best: "<green>🏁 完成 {course}，用时 <white>{time}</white> – 个人最佳！第 {rank} 名。"
+race-record: "<gold>🏆 {player} 在 {course} 创造了新纪录：{time}"
+usage-course: "<gray>/paddock course create|point|undo|reset|delete COURSE, /paddock course radius COURSE BLOCKS"
+course-bad-name: "<red>赛道名称：只能使用字母、数字、- 和 _，最多 24 个字符。"
+course-exists: "<red>已存在名为 {course} 的赛道。"
+course-created: "<green>赛道 {course} 已创建，起点就在你站的位置（半径 {radius}）。使用 /paddock course point {course} 添加检查点 – 最后一个点为终点。"
+course-other-world: "<red>这条赛道在世界 {world}。"
+course-point: "<green>已向 {course} 添加第 {number} 个点。最后一个点为终点。"
+course-no-point: "<red>只剩下起点了。"
+course-undone: "<gray>已删除 {course} 的最后一个点（起点之后还剩 {count} 个）。"
+course-radius: "<green>{course} 的半径现在为 {radius} 格。"
+course-reset: "<gray>{course} 的所有成绩已删除。"
+course-deleted: "<gray>赛道 {course} 已删除。"
+
+# 通过 Vystorm Core 提供的 /paddock：每位玩家看到自己语言的说明、帮助和 Tab 补全。commands.paddock 下的 "aliases"
+# 是额外的主命令（全服生效，由管理员在 Core 配置 commands.localized-aliases 中选择语言）；子命令的 "name" 和
+# "aliases" 在所有语言中都可使用，英文始终有效。
+compare-ride: "<red>请先骑上一匹马，再与另一匹马比较。"
+compare-target: "<red>骑马时看向范围内的另一匹马。"
+compare-header: "<gold>{ridden}（骑乘）→ {target}（目标）。差值：目标减去骑乘；速度和跳跃高度为估算值。"
+compare-speed: "<gray>速度（格/秒）: <white>{ridden} → {target}</white> ({delta})"
+compare-jump: "<gray>跳跃高度（格）: <white>{ridden} → {target}</white> ({delta})"
+compare-health: "<gray>最大生命值（❤）: <white>{ridden} → {target}</white> ({delta})"
+
+menu-page-title: "马厩 {page}/{pages}"
+menu-previous: "<yellow>上一页"
+menu-next: "<yellow>下一页"
+menu-summary: "<gold>马厩 {count}/{max} — {matches} 个结果"
+menu-clear: "<yellow>清除搜索：{search}"
+menu-no-matches: "<gray>没有匹配的动物"
+menu-sort-oldest: "<yellow>排序：最早寄存（点击切换）"
+menu-sort-newest: "<yellow>排序：最近寄存（点击切换）"
+menu-sort-name: "<yellow>排序：名称（点击切换）"
+menu-sort-type: "<yellow>排序：动物类型（点击切换）"
+
+commands:
+  paddock:
+    description: "认领、保护、入厩和召唤你的马；马群簿和赛马"
+    aliases: [马场]
+    sub:
+      train:
+        name: "训练"
+        aliases: []
+        description: "通过有上限的骑行和跳跃训练培养坐骑"
+        args:
+          exercise: "训练"
+      claim:
+        name: 认领
+        aliases: []
+        description: "认领你看着或骑着的已驯服动物"
+      release:
+        name: 放弃
+        aliases: []
+        description: "放弃对该动物的认领"
+      offer:
+        name: offer
+        aliases: []
+        description: "把你看着的动物出让给一名玩家"
+        args:
+          player: PLAYER
+          price: PRICE
+      accept:
+        name: accept
+        aliases: []
+        description: "接受收到的动物交易"
+      decline:
+        name: decline
+        aliases: []
+        description: "拒绝收到的动物交易"
+      trust:
+        name: 信任
+        aliases: []
+        description: "允许一名玩家骑乘和使用你的动物"
+        args:
+          player: 玩家
+      untrust:
+        name: 取消信任
+        aliases: []
+        description: "收回一名玩家对你的动物的使用权"
+        args:
+          player: 玩家
+      compare:
+        name: 比较
+        aliases: []
+        description: "比较你骑乘的马和你看着的马"
+      info:
+        name: 信息
+        aliases: []
+        description: "该动物的主人、受信任玩家、属性和血统"
+      rename:
+        name: 改名
+        aliases: []
+        description: "给你的动物起名"
+        args:
+          name: 名字
+      store:
+        name: 入厩
+        aliases: []
+        description: "把动物放进你的马厩"
+      list:
+        name: 列表
+        aliases: []
+        description: "列出你马厩里的动物"
+      stable:
+        name: 马厩
+        aliases: []
+        description: "打开马厩；可按名称或英文动物类型搜索"
+        args:
+          search: "搜索内容"
+      summon:
+        name: 召唤
+        aliases: []
+        description: "从马厩中召唤一只动物"
+        args:
+          animal: "编号|名字"
+      call:
+        name: 呼唤
+        aliases: []
+        description: "吹口哨呼唤你最后骑过的动物"
+      herd:
+        name: 马群
+        aliases: []
+        description: "你在世界中的动物的马群簿；停止 可结束指引箭头"
+        args:
+          stop: 停止
+      bet:
+        name: bet
+        aliases: []
+        description: "押注起点处的骑手：能否打破其个人最佳"
+        args:
+          rider: "RIDER"
+          side: "beat|miss"
+          amount: "AMOUNT"
+      race:
+        name: 赛马
+        aliases: []
+        description: "赛道、纪录和你的成绩；停止 可结束本次比赛"
+        args:
+          course: "赛道|停止"
+      course:
+        name: 赛道
+        aliases: []
+        description: "布置和编辑赛道"
+        sub:
+          create:
+            name: 创建
+            aliases: []
+            description: "以你所在位置为起点创建新赛道"
+            args:
+              course: 赛道
+          point:
+            name: 检查点
+            aliases: []
+            description: "在你所在位置添加检查点（最后一个为终点）"
+            args:
+              course: 赛道
+          undo:
+            name: 撤销
+            aliases: []
+            description: "删除最后一个检查点"
+            args:
+              course: 赛道
+          radius:
+            name: 半径
+            aliases: []
+            description: "检查点的大小（1-16 格）"
+            args:
+              course: 赛道
+              blocks: 格数
+          reset:
+            name: 重置
+            aliases: []
+            description: "删除该赛道的所有成绩"
+            args:
+              course: 赛道
+          delete:
+            name: 删除
+            aliases: []
+            description: "删除该赛道"
+            args:
+              course: 赛道
+      reload:
+        name: 重载
+        aliases: []
+        description: "重新加载配置和语言文件"
+    values:
+      ride: "骑行"
+      jump: "跳跃"
+      status: "状态"
+      stop: 停止
+
+# Free feature release: training
+training-stopped: "训练已停止，已保存进度保留。"
+training-requirements: "请在生存模式骑乘自己拥有的成年马、驴、骡或骆驼。Pets宠物和禁用世界不支持训练。"
+training-status: "训练：速度 {speed}/{max}，跳跃 {jump}/{max}；骑行 {ride}/{rideGoal}米，跳跃 {jumps}/{jumpGoal}；恢复 {cooldown}秒。"
+training-usage: "使用 /paddock train ride|jump|status|stop。"
+training-max: "此项目已达到最高训练等级。"
+training-unavailable: "此动物无法进行该训练，或训练数据需要管理员检查。"
+training-ride: "骑行训练开始：在地面移动。传送、下马或10分钟后结束训练。"
+training-jump: "跳跃训练开始：在平地完成至少2格远、0.6格高的跳跃并落地。"
+training-level: "训练提升！速度 {speed}/{max}，跳跃 {jump}/{max}。动物现在需要休息。"
+bet:
+  suspicious-party: "<gold>⚠ 押注检查：{player}（{rider} 的队伍）押 {rider} 在 {course} 失手，赢得 {amount}。"
+  suspicious-abort: "<gold>⚠ 押注检查：因 {rider} 在 {course} 中途放弃，{player} 押“失手”赢得 {amount}。"
+  open: "<gold>🏇 开放押注：{rider} 正在 {course} 的起点。能打破 {target} 吗？<yellow>/paddock bet {rider} beat|miss 金额"
+  target-finish: "完赛"
+  closed-rider: "<gold>🏇 有 {count} 笔押注跟随你 —— 奖池 {pool}。出发！"
+  closed: "<gray>🏇 {rider} 的押注已截止 —— 奖池 {pool}。"
+  won: "<green>🏇 {rider} 成功了 —— 你赢得 {amount}！"
+  returned: "<gray>🏇 对 {rider} 的押注已退还：{amount}。"
+  lost: "<red>🏇 你对 {rider} 的押注输了。"
+  refund: "<gray>🏇 {rider} 的比赛没有开始 —— 你的 {amount} 已退还。"
+  disabled: "<gray>本服务器已关闭赛马押注。"
+  no-economy: "<red>赛马押注需要经济插件。"
+  none-open: "<gray>目前没有骑手在起点等待。"
+  row: "<yellow>{rider}</yellow> <gray>在 {course} · 奖池 {pool} · 打破 ×{beat} · 失手 ×{miss}"
+  usage: "<gray>/paddock bet [骑手 beat|miss 金额]"
+  placed: "<green>🏇 押注 {amount} 于 {rider} —— {side}（当前赔率 ×{odds}）。"
+  on-you: "<gold>🏇 {player} 押注了你的比赛 —— 奖池 {pool}。"
+  side-beat: "打破最佳"
+  side-miss: "未能打破"
+  word-beat: "打破"
+  word-miss: "失手"
+  error-closed: "<red>{rider} 不在起点等待，或比赛已经开始。"
+  error-self: "<red>不能押注自己的比赛。"
+  error-twice: "<red>你已经押注过这场比赛。"
+  error-amount: "<red>押注范围为 {min} 到 {max}。"
+  error-full: "<red>这场比赛的押注已满。"
+  error-money: "<red>你没有那么多钱。"
+trade:
+  disabled: "<gray>本服务器已关闭动物交易。"
+  not-owner: "<red>只有主人才能出让这只动物。"
+  buyer-offline: "<red>{player} 不在线。"
+  self: "<red>你不能卖给自己。"
+  buyer-no-permission: "<red>{player} 在这里不能拥有动物。"
+  bad-price: "<red>请输入价格，例如 250 或 99.50（不填 = 赠送）。"
+  no-economy: "<red>价格需要 Vault 经济；请改为赠送。"
+  free: "免费"
+  offered: "<green>你已将 {name} 出让给 {player}（{price}）。"
+  incoming: "<gold>🐴 {player} 以 {price} 向你出让 {name}（{type}）。{seconds} 秒内有效。"
+  accept-button: "<green>[接受]"
+  decline-button: "<red>[拒绝]"
+  none: "<gray>你没有待处理的动物交易。"
+  gone: "<red>{name} 已不可用。"
+  too-poor: "<red>你需要 {price}。"
+  payment-failed: "<red>付款失败，未作任何更改。"
+  bought: "<green>🐴 {name} 现在归你了（来自 {player}，{price}）。"
+  sold: "<green>🐴 {player} 接手了 {name}（{price}）。"
+  sold-inbox: "{player} 买下了你的动物 {name}（{price}）。"
+  declined: "<gray>你拒绝了 {name}。"
+  declined-seller: "<gray>{player} 拒绝了 {name}。"
+panel:
+  sort-oldest: "最早入厩优先"
+  sort-newest: "最近入厩优先"
+  sort-name: "名称"
+  sort-type: "动物类型"
+  details: "详情"
+  records: "前十名"
+  search: "搜索名称或动物类型"
+  sort: "动物排序"
+  summon: "召唤"
+  track: "指引路线"
+  call: "呼唤到身边"
+  remove: "移除记录"
+  remove-confirm: "要从牧群名册中移除 {name} 吗？动物仍会留在原处。"
+  race-info: "在聊天中显示赛道"
+  page: "第 {page}/{pages} 页"
+  entries: "共 {count} 条记录"
+  type: "动物类型"
+  stored: "入厩时间"
+  world: "世界"
+  place: "位置"
+  seen: "最后出现时间"
+  status: "状态"
+  checkpoints: "检查点"
+  record: "纪录"
+  best: "个人最佳"
+  none: "无"
+  types:
+    horse: "马"
+    donkey: "驴"
+    mule: "骡"
+    llama: "羊驼"
+    trader_llama: "行商羊驼"
+    camel: "骆驼"
+    skeleton_horse: "骷髅马"
+    zombie_horse: "僵尸马"
+    other: "动物"

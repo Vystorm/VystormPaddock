@@ -1,0 +1,384 @@
+# Русский — UTF-8. Keep keys, placeholders and formatting tokens unchanged.
+usage-trust: <gray>/paddock trust|untrust PLAYER Когда вы смотрите или катаетесь на своем животном.
+denied: <red>У вас нет на это разрешения.
+player-only: <red>Запустите это в игре.
+reloaded: <green>Vystorm Паддок перезагружен.
+no-target: <red>Посмотрите на животное или покатайтесь на нем.
+not-claimed: <red>Никто не владеет этим животным. Тогда укрой его /paddock claim.
+not-yours: <red>Это животное принадлежит <yellow>{owner}</yellow>.
+already-yours: <gray>Это животное уже ваше.
+tame-first: <red>Сначала приручите это животное.
+claimed: <green>🐎 <yellow>{name}</yellow> Теперь твоя. Только вы и доверенные игроки можете кататься на нем.
+released: <gray>{name} больше не требуется.
+trusted: <green>{player} теперь может ездить на {name}.
+untrusted: <gray>{player} больше не может ездить на {name}.
+unknown-player: '<red>Неизвестный игрок: {player} <gray>Проверьте написание – игрок должен хотя бы раз заходить на сервер.'
+info: '<gold>{name}</gold> <gray>владелец <yellow>{owner}</yellow>Доверенное: <white>{trusted}</white>, <white>{stats}'
+stored: <green>{name} В вашей стабильной ({count}/{max}). Возвращай его обратно /paddock summon.
+stable-full: <red>Ваша конюшня заполнена ({max} мест).
+list-header: '<gold>Ваш конюшня ({count}/{max}):'
+list-entry: <gray>{number}. <yellow>{name}</yellow> <dark_gray>({type})
+list-empty: <gray>Пусто. Храните животное, которым вы владеете /paddock store.
+not-in-stable: <red>Нет такого животного в вашей конюшне - см /paddock list.
+summoned: <green>Здесь {name}.
+summoned-healed: <green>the {name} находится здесь, отдохнул в конюшне <gray>(+{hearts} ❤)
+cooldown: <red>Подождите {seconds} с, прежде чем вызвать снова.
+world-disabled: <red>Проповедь не допускается в этом мире.
+died-at: <red>Ваше животное {name} умерло в {place} ({world}).
+died-killed: <red>Ваше животное {name} было убито {player} в {place} ({world}).
+failed: <red>Это не сработало; подробности находятся в журнале сервера.
+pet-managed: <gray>Это животное - Vystorm питомцев - управляйте им /pet. Паддок защищает только его.
+list-hover: <gray>Нажмите, чтобы вызвать {name}
+info-breeding: <gray>Показатель размножения <gold>{rating}/100</gold>Сир <white>{sire}</white>Дамба <white>{dam}</white>Поколение
+  {generation}
+foal: <green>Жеребёнок {sire} и {dam} родился и принадлежит вам (показатель {rating}/100).
+usage-rename: <gray>/paddock rename NAME Когда вы смотрите или катаетесь на своем животном.
+renamed: <green>Животное теперь называется <yellow>{name}</yellow>.
+call-not-found: <red>Животное, на котором вы в последний раз ездили, не находится поблизости (разгружается, хранится или исчезает).
+call-other-world: <red>Животное находится в другом мире.
+called: <green>. {name} выпускается.
+menu-title: Стабильный ({count}/{max})
+menu-name: <gold>{name}
+menu-lore:
+- <gray>{type}
+- <gray>Хранится {date}
+- <yellow>Кликните, чтобы вызвать
+herd-title: Стадная книга ({count})
+herd-lore:
+- <gray>{type}
+- '<gray>{world}: {place}'
+- <gray>{where}
+- <gray>Последний раз видели {date}, {status}
+- '<yellow>Оригинальное название: Show Me the Way'
+- '<yellow>Правильный клик: позвоните сюда'
+- '<red>Сдвиг + правый клик: удалить запись'
+herd-away: На расстоянии {distance}
+herd-elsewhere: В другом мире
+herd-loaded: Сейчас рядом
+herd-unloaded: чанк не загруженный
+herd-stable: <gold>Ваша стабильная
+herd-stable-lore:
+- <gray>Животные, хранящиеся с /paddock store
+- <yellow>Нажмите, чтобы открыть
+herd-empty: <gray>Ваша стадная книга пуста. Заявленные животные появляются здесь, как только вы едете на них или их площадь
+  загружается.
+herd-disabled: <red>На этом сервере выключена книга о стаде.
+herd-removed: <gray>{name} было изъято из вашей стадной книги.
+herd-not-loaded: <gray>{name} слишком далеко, чтобы позвонить - следуйте за стрелой вместо этого.
+herd-other-world: <red>{name} в последний раз видели в мире {world}.
+herd-tracking: <green>🧭 Следуйте за стрелой в баре действий {name}. Перестань /paddock herd stop.
+herd-track: <gold>{arrow}</gold> <yellow>{name}</yellow> <gray>{distance}
+herd-found: <green>{name} находится здесь.
+herd-arrived: <gray>Здесь в последний раз видели {name}.
+herd-track-end: <gray>Путешественник остановился.
+herd-track-stopped: <gray>Путешественник остановился.
+herd-not-tracking: <gray>Вы не следите за животными.
+vmenu-herd: Книга стада
+vmenu-herd-desc: Где твои лошади и как туда добраться
+vmenu-races: Конные скачки
+vmenu-races-desc: Гоночные курсы, рекорды и ваши лучшие времена
+race-title: Гоночные курсы
+race-lore:
+- '<gray>{world}: начало с {place}'
+- <gray>{checkpoints} контрольно-пропускных пунктов
+- '<gold>Рекорд: {record}'
+- '<gray>Ваше лучшее: {best}'
+- <yellow>Нажмите для топ 10
+race-disabled: <red>На этом сервере выключены гонки.
+race-none: <gray>Гоночных курсов пока нет.
+race-unknown: <red>Никакого гоночного курса {course}.
+race-not-running: <gray>Вы не участвуете в гонке.
+race-info: <gold>🏁 {course}</gold> <gray>Начнем с <white>{place}</white> ({world}), {checkpoints} КПП. Выйдите из круга старта,
+  чтобы запустить часы.
+race-top-entry: <gray>{rank}. <yellow>{player}</yellow> <white>{time}
+race-top-empty: <gray>Нет времени – будьте первыми!
+race-your-rank: '<gray>Вы: место {rank} с {time}'
+race-ready: '<yellow>the {course}: выйдите из круга старта, чтобы запустить часы'
+race-go: <green>{course} – {total} ворота до финиша.
+race-progress: <gold>⏱ {time}</gold> <gray>ворота {checkpoint}/{total}
+race-cancelled: <red>Гонка на {course} отменена.
+race-timeout: '<red>Гонка на {course} отменена: время вышло.'
+race-finish: <green>{course} завершено в <white>{time}</white>. Лучше всего остановиться на {best} (место {rank}).
+race-finish-best: <green>{course} завершено в <white>{time}</white> Личное лучшее! Место {rank}.
+race-record: '<gold>a {player} установил новый рекорд на {course}: {time}'
+usage-course: <gray>/paddock course create|point|undo|reset|delete COURSE, /paddock course radius COURSE BLOCKS
+course-bad-name: '<red>Названия курсов: буквы, цифры, - и _, максимум 24 знаков.'
+course-exists: <red>Курс под названием {course} уже существует.
+course-created: <green>Курс {course} Начало там, где ты стоишь (Радиус) {radius}). Добавить контрольные точки с /paddock course
+  point {course} – Последним пунктом является финиш.
+course-other-world: <red>Этот курс в мире {world}.
+course-point: <green>Точка {number} добавлена к {course}. Последним пунктом является финиш.
+course-no-point: <red>Осталось только начало.
+course-undone: <gray>Последняя точка {course} удалена ({count} оставлена после старта).
+course-radius: <green>Радиус {course} теперь составляет {radius} блок.
+course-reset: <gray>Все время на {course} были удалены.
+course-deleted: <gray>Курс {course} удален.
+compare-ride: <red>Сравните лошадь с другой лошадью.
+compare-target: <red>Посмотрите на другую лошадь в пределах досягаемости во время езды.
+compare-header: '<gold>{ridden} (наезд) → {target} (посмотреть) Отличия: цель минус ездовая; скорость и прыжок — оценки.'
+compare-speed: '<gray>Скорость (блоки/с): <white>{ridden} → {target}</white> ({delta})'
+compare-jump: '<gray>Прыжки (блоки): <white>{ridden} → {target}</white> ({delta})'
+compare-health: '<gray>Здоровье Макса: <white>{ridden} → {target}</white> ({delta})'
+menu-page-title: Стабильный {page}/{pages}
+menu-previous: <yellow>Предыдущая страница
+menu-next: <yellow>Следующая страница
+menu-summary: <gold>Стабильные матчи {count}/{max} — {matches}
+menu-clear: '<yellow>Чистый поиск: {search}'
+menu-no-matches: <gray>Нет подходящих животных
+menu-sort-oldest: '<yellow>Сорт: самый старый первый (нажмите, чтобы изменить)'
+menu-sort-newest: '<yellow>Sort: newest first (нажмите, чтобы изменить)'
+menu-sort-name: '<yellow>Сортировка: имя (нажмите, чтобы изменить)'
+menu-sort-type: <yellow>Тип животного (нажмите, чтобы изменить)
+commands:
+  paddock:
+    description: Утверждайте, защищайте, уравновешивайте и призывайте своих лошадей; книга стада и скачки
+    aliases: []
+    sub:
+      train:
+        name: "train"
+        aliases: []
+        description: "Тренируйте свою верховую особь с ограниченным ростом характеристик"
+        args:
+          exercise: "УПРАЖНЕНИЕ"
+      claim:
+        name: claim
+        aliases: []
+        description: Заявите о прирученном животном, на которое вы смотрите или на котором катаетесь
+      release:
+        name: release
+        aliases: []
+        description: Откажитесь от претензий на животное
+      offer:
+        name: offer
+        aliases: []
+        description: "Предложить животное, на которое вы смотрите, игроку"
+        args:
+          player: PLAYER
+          price: PRICE
+      accept:
+        name: accept
+        aliases: []
+        description: "Принять полученное предложение"
+      decline:
+        name: decline
+        aliases: []
+        description: "Отклонить полученное предложение"
+      trust:
+        name: trust
+        aliases: []
+        description: Позвольте игроку ездить и использовать ваше животное
+        args:
+          player: PLAYER
+      untrust:
+        name: untrust
+        aliases: []
+        description: Верните доступ игрока к вашему животному
+        args:
+          player: PLAYER
+      compare:
+        name: compare
+        aliases: []
+        description: Сравните свою лошадь с лошадью, на которую вы смотрите
+      info:
+        name: info
+        aliases: []
+        description: Владелец, доверенные игроки, статистика и разведение животного
+      rename:
+        name: rename
+        aliases: []
+        description: Дайте своему животному имя
+        args:
+          name: NAME
+      store:
+        name: store
+        aliases: []
+        description: Поместите животное в конюшню
+      list:
+        name: list
+        aliases: []
+        description: Перечислите животных в вашей конюшне
+      stable:
+        name: stable
+        aliases: []
+        description: Откройте свою конюшню; необязательно имена поиска или английские типы животных
+        args:
+          search: SEARCH
+      summon:
+        name: summon
+        aliases: []
+        description: Выведите животное из своей конюшни
+        args:
+          animal: NUMBER|NAME
+      call:
+        name: call
+        aliases: []
+        description: Свисток для животного, на котором вы ездили в последний раз
+      herd:
+        name: herd
+        aliases: []
+        description: 'Оригинальное название: Herd Book of Your Animals Out in the World: Stop Ends the Guide arrow'
+        args:
+          stop: остановить
+      bet:
+        name: bet
+        aliases: []
+        description: "Ставка на всадника на старте: побьёт ли он свой рекорд"
+        args:
+          rider: "RIDER"
+          side: "beat|miss"
+          amount: "AMOUNT"
+      race:
+        name: race
+        aliases: []
+        description: Гоночные курсы, записи и ваше время; остановите свой бег
+        args:
+          course: COURSE |стоп
+      course:
+        name: course
+        aliases: []
+        description: Выложить и отредактировать гоночные курсы
+        sub:
+          create:
+            name: create
+            aliases: []
+            description: Новый курс начинается там, где вы стоите
+            args:
+              course: COURSE
+          point:
+            name: point
+            aliases: []
+            description: Добавьте контрольный пункт, где вы стоите (последний - финиш)
+            args:
+              course: COURSE
+          undo:
+            name: undo
+            aliases: []
+            description: Удалить последний контрольный пункт
+            args:
+              course: COURSE
+          radius:
+            name: radius
+            aliases: []
+            description: Размер КПП (1-16 блоков)
+            args:
+              course: COURSE
+              blocks: BLOCKS
+          reset:
+            name: reset
+            aliases: []
+            description: Удалить все время курса
+            args:
+              course: COURSE
+          delete:
+            name: delete
+            aliases: []
+            description: Удалить курс
+            args:
+              course: COURSE
+      reload:
+        name: reload
+        aliases: []
+        description: Перезагрузка конфигурационных и языковых файлов
+    values:
+      ride: "езда"
+      jump: "прыжок"
+      status: "статус"
+      stop: остановить
+
+# Free feature release: training
+training-stopped: "Тренировка остановлена; сохранённый прогресс остаётся."
+training-requirements: "Сядьте на свою взрослую лошадь, осла, мула или верблюда в Выживании. Pets и отключённые миры исключены."
+training-status: "Тренировка: скорость {speed}/{max}, прыжок {jump}/{max}; путь {ride}/{rideGoal} м, прыжки {jumps}/{jumpGoal}; отдых {cooldown}с."
+training-usage: "Используйте /paddock train ride|jump|status|stop."
+training-max: "Это упражнение достигло максимального уровня."
+training-unavailable: "Животное не может выполнить упражнение, либо данные тренировки требуют проверки."
+training-ride: "Начата езда: двигайтесь по земле. Телепортация, спешивание или 10 минут завершают занятие."
+training-jump: "Начаты прыжки: приземляйтесь на ровной земле после прыжков от 2 блоков в длину и 0,6 в высоту."
+training-level: "Улучшение! Скорость {speed}/{max}, прыжок {jump}/{max}. Животному нужен отдых."
+bet:
+  suspicious-party: "<gold>⚠ Проверка ставок: {player} (группа {rider}) выиграл {amount}, поставив на неудачу {rider} на {course}."
+  suspicious-abort: "<gold>⚠ Проверка ставок: {player} выиграл {amount} на «мимо», потому что {rider} прервал заезд на {course}."
+  open: "<gold>🏇 Ставки открыты: {rider} на старте трассы {course}. Побьёт ли {target}? <yellow>/paddock bet {rider} beat|miss СУММА"
+  target-finish: "финиш"
+  closed-rider: "<gold>🏇 С вами едут ставок: {count} – банк {pool}. Вперёд!"
+  closed: "<gray>🏇 Ставки на {rider} закрыты – банк {pool}."
+  won: "<green>🏇 {rider} справился – ваш выигрыш {amount}!"
+  returned: "<gray>🏇 Ставка на {rider} возвращена: {amount}."
+  lost: "<red>🏇 Ваша ставка на {rider} проиграла."
+  refund: "<gray>🏇 Заезд {rider} не начался – ваши {amount} возвращены."
+  disabled: "<gray>Ставки на скачки на этом сервере отключены."
+  no-economy: "<red>Для ставок нужен плагин экономики."
+  none-open: "<gray>Сейчас никто не ждёт на старте."
+  row: "<yellow>{rider}</yellow> <gray>на {course} · банк {pool} · побьёт ×{beat} · мимо ×{miss}"
+  usage: "<gray>/paddock bet [ВСАДНИК beat|miss СУММА]"
+  placed: "<green>🏇 {amount} на {rider} – {side} (текущий коэффициент ×{odds})."
+  on-you: "<gold>🏇 {player} поставил на ваш заезд – банк {pool}."
+  side-beat: "побьёт рекорд"
+  side-miss: "не побьёт"
+  word-beat: "побить"
+  word-miss: "мимо"
+  error-closed: "<red>{rider} не ждёт на старте, или заезд уже начался."
+  error-self: "<red>Нельзя ставить на свой заезд."
+  error-twice: "<red>Вы уже поставили на этот заезд."
+  error-amount: "<red>Ставки от {min} до {max}."
+  error-full: "<red>На этот заезд больше ставок не принимают."
+  error-money: "<red>У вас нет столько денег."
+trade:
+  disabled: "<gray>Торговля животными на этом сервере отключена."
+  not-owner: "<red>Предложить это животное может только владелец."
+  buyer-offline: "<red>{player} не в сети."
+  self: "<red>Нельзя продать самому себе."
+  buyer-no-permission: "<red>{player} не может владеть животными здесь."
+  bad-price: "<red>Укажите цену, например 250 или 99.50 (без цены = подарок)."
+  no-economy: "<red>Для цены нужна экономика Vault; подарите животное."
+  free: "бесплатно"
+  offered: "<green>Вы предложили {name} игроку {player} ({price})."
+  incoming: "<gold>🐴 {player} предлагает вам {name} ({type}) за {price}. Действует {seconds} с."
+  accept-button: "<green>[Принять]"
+  decline-button: "<red>[Отклонить]"
+  none: "<gray>У вас нет открытых предложений."
+  gone: "<red>{name} больше недоступен."
+  too-poor: "<red>Нужно {price}."
+  payment-failed: "<red>Платёж не прошёл; ничего не изменилось."
+  bought: "<green>🐴 {name} теперь ваш (от {player}, {price})."
+  sold: "<green>🐴 {player} забрал {name} ({price})."
+  sold-inbox: "{player} купил ваше животное {name} ({price})."
+  declined: "<gray>Вы отклонили {name}."
+  declined-seller: "<gray>{player} отклонил {name}."
+panel:
+  sort-oldest: "Сначала старые"
+  sort-newest: "Сначала новые"
+  sort-name: "Имя"
+  sort-type: "Вид животного"
+  details: "Подробности"
+  records: "Лучшие 10"
+  search: "Поиск по имени или виду животного"
+  sort: "Сортировка животных"
+  summon: "Призвать"
+  track: "Показать путь"
+  call: "Позвать сюда"
+  remove: "Удалить запись"
+  remove-confirm: "Удалить {name} из книги стада? Животное останется на месте."
+  race-info: "Показать трассу в чате"
+  page: "Страница {page}/{pages}"
+  entries: "Записей: {count}"
+  type: "Вид животного"
+  stored: "В конюшне с"
+  world: "Мир"
+  place: "Место"
+  seen: "Последняя встреча"
+  status: "Состояние"
+  checkpoints: "Контрольные точки"
+  record: "Рекорд"
+  best: "Ваше лучшее время"
+  none: "Нет"
+  types:
+    horse: "Лошадь"
+    donkey: "Осёл"
+    mule: "Мул"
+    llama: "Лама"
+    trader_llama: "Лама торговца"
+    camel: "Верблюд"
+    skeleton_horse: "Лошадь-скелет"
+    zombie_horse: "Лошадь-зомби"
+    other: "Животное"
