@@ -1,5 +1,24 @@
 # Vystorm Paddock
 
+**Your horse stays yours.** Tame a horse, donkey, mule, llama, camel or undead horse and it is claimed for you: nobody else can ride it, hurt it, leash it or open its saddlebags. Put it into your virtual stable and summon it anywhere, saddle, armour, chest and name included.
+
+- Claim on taming (automatic) or `/paddock claim` for animals you tamed before.
+- Trust friends per animal: `/paddock trust <player>`.
+- `/paddock store` puts the animal you ride or look at into your stable, `/paddock list` shows it, `/paddock summon [number|name]` brings it back next to you (no argument: your only animal, or the stable menu; names tab-complete).
+- Stable size per permission: `vystormpaddock.slots.<n>` (default 3), summon cooldown, worlds without summoning.
+- Animals rest in the stable: they heal evenly while stored, fully after `stable-rest-minutes` (default 10).
+- `/paddock info` shows owner, trusted players, health, speed in blocks/s and jump height.
+- `/paddock compare` compares the ordinary horse you ride with another ordinary horse you look at within `reach`: estimated speed, jump height and maximum health, with signed differences (looked-at minus ridden). Useful for choosing breeding or racing horses; also `/pferdekoppel vergleichen` and `/马场 比较`. Uses `vystormpaddock.use`; no ownership required, just like info.
+- Owners get a message with place and killer when their animal dies. Optional protection from all non-player damage.
+- `/paddock stable` opens your stable as a chest menu, `/paddock list` entries are clickable, summoned animals carry you right away (with saddle).
+- `/paddock call` whistles the animal you last rode to you, `/paddock rename NAME` names it without a name tag.
+- Breeding: foals remember sire, dam and generation, every animal gets a breeding score from 0 to 100 from speed, jump and health; foals of two of your animals are yours automatically.
+- Works next to Vystorm Pets: horses, donkeys, llamas and camels that are pets stay with Pets (taming, storing, summoning); Paddock just protects them for their owner and handles mules, trader llamas and undead horses.
+- **Herd book**: `/paddock herd` lists every claimed animal you have out in the world – where it was last seen and how far away it is. Click to get an arrow to it, right click to call it over.
+- **Horse races**: time trials with checkpoints, personal bests, a top 10 per course and record announcements. `/paddock race` opens the course list.
+- Ownership is stored on the animal itself, stables in one small file per player. No database; Vystorm Core is required.
+- Texts in English, German, Simplified Chinese, French, Brazilian Portuguese, Italian and Russian through the Vystorm Core language system; `config.yml` is editable in game with `/vadmin config`.
+- Needs [Vystorm Core](https://www.spigotmc.org/resources/139848/) 0.65.0 or newer (free). What the build checks: Java 21 bytecode (`--release 21`), compiled against the Paper API 1.21.11 and, in `compat1206`, against Paper 1.20.6, with isolated tests against the 1.20.6 API. Use the Java version your server needs.
 
 ## Animal trade (1.14.0)
 
@@ -13,25 +32,6 @@ The defaults are 300 metres or 12 qualifying jumps per level, five levels and 60
 
 `vystormpaddock.train` defaults to true, but only the animal's owner can train it; trust and administrator bypass do not substitute for ownership. Pets-managed animals and disabled worlds are excluded. Unsupported attributes are rejected. Teleporting, dismounting, disconnecting, reloading or ten minutes ends the session. The existing race clock samples only opted-in riders; no additional repeating task or world scan is added. All messages and command help are available in all seven bundled languages.
 
-**Your horse stays yours.** Tame a horse, donkey, mule, llama, camel or undead horse and it is claimed for you: nobody else can ride it, hurt it, leash it or open its saddlebags. Put it into your virtual stable and summon it anywhere, saddle, armour, chest and name included.
-
-- Claim on taming (automatic) or `/paddock claim` for animals you tamed before.
-- Trust friends per animal: `/paddock trust <player>`.
-- `/paddock store` puts the animal you ride or look at into your stable, `/paddock list` shows it, `/paddock summon [number|name]` brings it back next to you (no argument: your only animal, or the stable menu; names tab-complete).
-- Stable size per permission: `vystormpaddock.slots.<n>` (default 3), summon cooldown, worlds without summoning.
-- Animals rest in the stable: they heal evenly while stored, fully after `stable-rest-minutes` (default 10).
-- `/paddock info` shows owner, trusted players, health, speed in blocks/s and jump height.
-- `/paddock compare` compares the ordinary horse you ride with another ordinary horse you look at within `reach`: estimated speed, jump height and maximum health, with signed differences (looked-at minus ridden). Useful for choosing breeding or racing horses; also `/pferdekoppel vergleichen` and `/马场 比较`. Uses `vystormpaddock.use`; no ownership required, just like info.
-- Owners get a message with place and killer when their animal dies. Optional protection from all non-player damage.
-- `/paddock stable` opens your stable as a chest menu, `/paddock list` entries are clickable, summoned animals carry you right away (with saddle).
-- `/paddock call` whistles the animal you last rode to you, `/paddock rename NAME` names it without a name tag.
-- Breeding: foals remember sire, dam and generation, every animal gets a breeding score 0â100 from speed, jump and health; foals of two of your animals are yours automatically.
-- Works next to Vystorm Pets: horses, donkeys, llamas and camels that are pets stay with Pets (taming, storing, summoning); Paddock just protects them for their owner and handles mules, trader llamas and undead horses.
-- **Herd book**: `/paddock herd` lists every claimed animal you have out in the world – where it was last seen and how far away it is. Click to get an arrow to it, right click to call it over.
-- **Horse races**: time trials with checkpoints, personal bests, a top 10 per course and record announcements. `/paddock race` opens the course list.
-- Ownership is stored on the animal itself, stables in one small file per player. No database; Vystorm Core is required.
-- Texts in English, German, Simplified Chinese, French, Brazilian Portuguese, Italian and Russian through the Vystorm Core language system; `config.yml` is editable in game with `/vadmin config`.
-- Spigot/CraftBukkit 26.2–26.3 and the existing Paper/Purpur paths. Java 25 is the tested runtime. Needs [Vystorm Core](https://www.spigotmc.org/resources/139848/) 0.64.0+ (free).
 
 ## Stable browser
 
@@ -73,6 +73,14 @@ races:
   show-checkpoints: true   # particles at the next checkpoint
 ```
 
+## Switches
+
+Every feature has an on/off switch in `config.yml` (listed in Vystorm Core's `/vadmin features`, applied without a restart except `tutorial.enabled`; all on by default except `protect-from-environment` and `call-across-worlds`, which shipped off): `claims.enabled` (the whole plugin), `auto-claim-on-tame`, `protect-from-environment`, `trust.enabled`, `stable.enabled`, `stable-menu.enabled`, `stable-rest.enabled`, `mount-on-summon`, `info.enabled`, `death-notices.enabled`, `call.enabled`, `call-across-worlds`, `rename.enabled`, `breeding-records.enabled`, `claim-foals`, `pets-protection.enabled`, `herd-book.enabled`, `races.enabled`, `races.course-editor.enabled`, `races.announce-records`, `races.show-checkpoints`, `betting.enabled`, `betting.log`, `training.enabled`, `trade.enabled`, `tutorial.enabled`. A switched-off feature answers "This feature is switched off on this server."; claims, stables, herd books, races and training stay saved.
+
+## Placeholders
+
+With Vystorm Core 0.65.0 the plugin registers the namespace `paddock` (server thread; empty while the feature is switched off): `stable_slots`, `stable_stored` (kept for five seconds, it reads the stable file), `mount_speed_level`, `mount_jump_level`, `mount_owner`, `race_best`, `race_rank`, `race_record` (each with a course name) and `race_courses`. Examples: `%vystorm_paddock_stable_stored%` and `{paddock:race_best:Meadow}` (the player's best time on the course Meadow). `/vadmin placeholders paddock` lists them.
+
 ## Permissions
 
 | | |
@@ -90,7 +98,7 @@ races:
 
 Compatibility uses Core's attribute and inventory adapters. No Paddock feature is disabled on 1.20.6. Animals absent from the server use a saddle menu icon. Serialized animals from newer Minecraft versions cannot be downgraded; failed deserialization keeps the stable entry intact.
 
-Build with JDK 25 and `-PvystormCoreJar=<Core-0.64.0-or-newer.jar>`. `check` includes `compat1206` (Java 21 compilation against the 1.20.6 API) and isolated legacy API tests. Override the default local library directory with `-Ppaper1206Libraries=<path/to/1.20.6/libraries>`; the directory must contain the Paper API and its libraries.
+Build with JDK 25 and `-PvystormCoreJar=<Core-0.65.0-or-newer.jar>`. `check` includes `compat1206` (Java 21 compilation against the 1.20.6 API) and isolated legacy API tests. Override the default local library directory with `-Ppaper1206Libraries=<path/to/1.20.6/libraries>`; the directory must contain the Paper API and its libraries.
 
 ## License
 

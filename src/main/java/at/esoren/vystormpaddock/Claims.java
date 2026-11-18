@@ -31,10 +31,15 @@ public final class Claims {
     /** True for animals managed by Vystorm Pets. */
     public static boolean pet(Entity entity) { return entity.getPersistentDataContainer().has(PET_ID, PersistentDataType.STRING); }
 
-    /** Owner: Paddock claim, else the Vystorm Pets owner, else null. */
+    /** trust.enabled and pets-protection.enabled; off, trusted players or Vystorm Pets owners count for nothing (the data stays). */
+    private volatile boolean trustOn = true, petsOn = true;
+
+    void switches(boolean trust, boolean pets) { trustOn = trust; petsOn = pets; }
+
+    /** Owner: Paddock claim, else the Vystorm Pets owner (while pets-protection is on), else null. */
     public UUID owner(Entity entity) {
         String raw = entity.getPersistentDataContainer().get(owner, PersistentDataType.STRING);
-        if (raw == null) raw = entity.getPersistentDataContainer().get(PET_OWNER, PersistentDataType.STRING);
+        if (raw == null && petsOn) raw = entity.getPersistentDataContainer().get(PET_OWNER, PersistentDataType.STRING);
         try { return raw == null ? null : UUID.fromString(raw); } catch (IllegalArgumentException broken) { return null; }
     }
 
@@ -75,7 +80,7 @@ public final class Claims {
         UUID id = owner(entity);
         if (id == null || id.equals(player.getUniqueId())) return true;
         if (player.hasPermission("vystormpaddock.bypass")) return true;
-        return trusted(entity).contains(player.getUniqueId());
+        return trustOn && trusted(entity).contains(player.getUniqueId());
     }
 
     static Set<UUID> parse(String raw) {

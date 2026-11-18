@@ -50,7 +50,8 @@ final class PaddockPanels implements PaddockPanel.Actions {
     }
 
     boolean allowed(Player player, String name) {
-        return plugin.isEnabled() && player.isOnline()
+        return plugin.isEnabled() && player.isOnline() && PaddockPlugin.enabled(plugin, Feature.CLAIMS)
+                && (!name.equals("stable") || PaddockPlugin.enabled(plugin, Feature.STABLE) && PaddockPlugin.enabled(plugin, Feature.STABLE_MENU))
                 && player.hasPermission(name.equals("races") ? "vystormpaddock.race" : "vystormpaddock.use")
                 && (!name.equals("herd") || herd.enabled()) && (!name.equals("races") || races.enabled());
     }

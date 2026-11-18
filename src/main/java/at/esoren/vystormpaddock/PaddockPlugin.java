@@ -71,14 +71,37 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
     private final Map<UUID, Long> lastWarning = new HashMap<>();
     private final Map<UUID, UUID> lastRidden = new HashMap<>();
     private boolean mountOnSummon = true, callAcrossWorlds = false, claimFoals = true;
+    /** Minimum Vystorm Core: placeholders through api.placeholders(). */
+    static final String MIN_CORE = "0.65.0";
+    /** Every feature switch as read in load(); null (= defaults) until then and in tests that build the plugin by hand. */
+    private Feature.Switches switches;
+
+    /** Whether a feature (and claims.enabled) is on; static so helpers and mocked plugins in tests read the real field. */
+    static boolean enabled(PaddockPlugin plugin, Feature feature) {
+        Feature.Switches current = plugin == null || plugin.switches == null ? Feature.Switches.without() : plugin.switches;
+        return current.on(feature);
+    }
+
+    private boolean on(Feature feature) { return enabled(this, feature); }
+
+    /** True (and the shared off message sent) when one of the features is switched off. */
+    private boolean off(CommandSender sender, Feature... features) {
+        for (Feature feature : features) {
+            if (on(feature)) continue;
+            lang.send(sender, "feature-off");
+            return true;
+        }
+        return false;
+    }
+
     /** Animal types Vystorm Pets takes over on taming; with Pets installed Paddock leaves them to Pets. */
     private static final Set<org.bukkit.entity.EntityType> PET_TYPES = Set.of(org.bukkit.entity.EntityType.HORSE, org.bukkit.entity.EntityType.DONKEY,
             org.bukkit.entity.EntityType.LLAMA, org.bukkit.entity.EntityType.CAMEL);
 
     @Override
     public void onEnable() {
-        if (!CoreApi.atLeast("0.64.0")) {
-            getLogger().severe("Vystorm Core 0.64.0 or newer is required; please update Core first.");
+        if (!CoreApi.atLeast(MIN_CORE)) {
+            getLogger().severe("Vystorm Core " + MIN_CORE + " or newer is required; please update Core first.");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -86,7 +109,8 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
 
         core.admin().updates().spigot(this, 140050);
         saveDefaultConfig();
-        lang = core.lang().register(this); try { core.registerTutorial(this); } catch (RuntimeException noTutorial) { getLogger().fine("Tutorial not registered: " + noTutorial); }
+        lang = core.lang().register(this);
+        registerTutorial();
         claims = new Claims(this);
         stable = new Stable(getDataFolder().toPath().resolve("stables"), getLogger(), core.data().files());
         herdBook = new HerdBook(this, core, new Herd(getDataFolder().toPath().resolve("herd"), core.data().files()));
@@ -103,29 +127,73 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
         raceTracker.start();
         registerMenus();
         core.settings().config().register(this, "config.yml", this::load);
+        declareSwitches();
+        try { registerPlaceholders(core.placeholders()); }
+        catch (RuntimeException failure) { getLogger().log(Level.WARNING, "Placeholders not registered", failure); }
+        registerCommands();
+    }
+
+    /** The tutorial in /vmenu unless tutorial.enabled is false; read once, because Core lists tutorials when a plugin starts. */
+    void registerTutorial() {
+        if (!getConfig().getBoolean(Feature.TUTORIAL.path, true)) return;
+        try { core.registerTutorial(this); } catch (RuntimeException noTutorial) { getLogger().fine("Tutorial not registered: " + noTutorial); }
+    }
+
+    /** Every switch in /vadmin features with its one-line description in the admin's language. */
+    private void declareSwitches() {
+        var config = core.settings().config();
+        for (Feature feature : Feature.values()) {
+            config.feature(this, feature.path, null, lang.ref(feature.description()));
+            if (feature.needsRestart()) config.activation(this, feature.path, Vystorm.vystorm_core._uiMethods.settings.SettingPolicy.Activation.RESTART);
+        }
+    }
+
+    /** Registers /paddock once; the subcommands of switched-off features stay out of help and tab completion (asked live). */
+    private void registerCommands() {
         core.command().register(this, lang, commandSpec(this));
+    }
+
+    /** The namespace {@code paddock}: stable, ridden animal and races (server thread; empty while switched off). */
+    void registerPlaceholders(Vystorm.vystorm_core._advancedMethods.placeholderHandler.PlaceholderInterface registry) {
+        PaddockPlaceholders.register(registry, this, new PaddockPlaceholders.Source() {
+            @Override public boolean on(Feature feature) { return PaddockPlugin.this.on(feature); }
+            @Override public int slots(Player player) { return PaddockPlugin.this.slots(player); }
+            @Override public int stored(UUID player) {
+                try { return stable == null ? 0 : stable.list(player).size(); } catch (IOException unreadable) { return -1; }
+            }
+            @Override public Claims claims() { return claims; }
+            @Override public Races races() { return raceTracker == null ? null : raceTracker.races(); }
+        }, key -> lang == null ? key : lang.ref(key));
     }
 
     private void load() {
         reloadConfig();
+        Feature.Switches before = switches;
+        switches = Feature.Switches.read(getConfig());
         if (lang != null) lang.reload();
-        autoClaim = getConfig().getBoolean("auto-claim-on-tame", true);
-        protectEnvironment = getConfig().getBoolean("protect-from-environment", false);
+        autoClaim = on(Feature.AUTO_CLAIM);
+        protectEnvironment = on(Feature.ENVIRONMENT);
         defaultSlots = Math.max(0, getConfig().getInt("stable-slots", 3));
         summonCooldownMillis = Math.max(0, getConfig().getInt("summon-cooldown-seconds", 10)) * 1000L;
-        stableRestMillis = Math.max(0, getConfig().getInt("stable-rest-minutes", 10)) * 60_000L;
+        // stable-rest.enabled off: no healing, whatever stable-rest-minutes says
+        stableRestMillis = restMillis(getConfig().getInt("stable-rest-minutes", 10), on(Feature.REST));
         reach = Math.clamp(getConfig().getDouble("reach", 6), 2, 32);
-        mountOnSummon = getConfig().getBoolean("mount-on-summon", true);
-        callAcrossWorlds = getConfig().getBoolean("call-across-worlds", false);
-        claimFoals = getConfig().getBoolean("claim-foals", true);
+        mountOnSummon = on(Feature.MOUNT_ON_SUMMON);
+        callAcrossWorlds = on(Feature.CALL_ACROSS_WORLDS);
+        claimFoals = on(Feature.CLAIM_FOALS);
+        claims.switches(on(Feature.TRUST), on(Feature.PETS));
         Set<String> worlds = new LinkedHashSet<>();
         for (String world : getConfig().getStringList("disabled-worlds")) worlds.add(world.toLowerCase(Locale.ROOT));
         disabledWorlds = Set.copyOf(worlds);
         training.configure();
-        herdBook.configure(getConfig().getBoolean("herd-book.enabled", true), getConfig().getInt("herd-book.track-seconds", 120));
-        raceTracker.configure(getConfig().getBoolean("races.enabled", true), getConfig().getInt("races.max-minutes", 10),
-                getConfig().getDouble("races.default-radius", 4), getConfig().getBoolean("races.announce-records", true),
-                getConfig().getBoolean("races.show-checkpoints", true));
+        herdBook.configure(on(Feature.HERD), getConfig().getInt("herd-book.track-seconds", 120));
+        raceTracker.configure(on(Feature.RACES), getConfig().getInt("races.max-minutes", 10),
+                getConfig().getDouble("races.default-radius", 4), on(Feature.RECORD_ANNOUNCEMENTS), on(Feature.CHECKPOINTS));
+        // help and tab completion ask the switches live; only send online players their command list again
+        if (before != null && !before.equals(switches)) {
+            try { core.command().refresh(); }
+            catch (RuntimeException failure) { getLogger().log(Level.WARNING, "Command list not sent again", failure); }
+        }
     }
 
     @Override
@@ -212,6 +280,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
 
     /** Stage PROTECT, registered in {@link #handleSharedEvents}. */
     public void onDamage(EntityDamageByEntityEvent event) {
+        if (!on(Feature.CLAIMS)) return; // claims.enabled off: claimed animals are not protected
         if (!(event.getEntity() instanceof AbstractHorse horse) || !claims.claimed(horse)) return;
         Player attacker = playerBehind(event.getDamager());
         if (attacker != null && !claims.allowed(horse, attacker)) {
@@ -231,6 +300,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
 
     /** Stage PROTECT, registered in {@link #handleSharedEvents}. */
     public void onMount(EntityMountEvent event) {
+        if (!on(Feature.CLAIMS)) return;
         if (!(event.getMount() instanceof AbstractHorse horse) || !(event.getEntity() instanceof Player player)) return;
         if (!claims.allowed(horse, player)) {
             event.setCancelled(true);
@@ -246,6 +316,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
 
     /** Stage PROTECT, registered in {@link #handleSharedEvents}. */
     public void onInteract(PlayerInteractEntityEvent event) {
+        if (!on(Feature.CLAIMS)) return;
         if (!(event.getRightClicked() instanceof AbstractHorse horse) || claims.allowed(horse, event.getPlayer())) return;
         event.setCancelled(true);
         deny(event.getPlayer(), horse);
@@ -253,6 +324,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
 
     /** Stage PROTECT, registered in {@link #handleSharedEvents}. */
     public void onLeash(PlayerLeashEntityEvent event) {
+        if (!on(Feature.CLAIMS)) return;
         if (!(event.getEntity() instanceof AbstractHorse horse) || claims.allowed(horse, event.getPlayer())) return;
         event.setCancelled(true);
         deny(event.getPlayer(), horse);
@@ -272,6 +344,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
         if (!(event.getEntity() instanceof AbstractHorse horse) || Claims.pet(horse)) return;
         UUID owner = claims.owner(horse);
         herdBook.forget(owner, horse.getUniqueId());
+        if (!on(Feature.DEATH_NOTICES)) return; // death-notices.enabled off: no message
         Player player = owner == null ? null : Bukkit.getPlayer(owner);
         if (player == null) return;
         Location at = horse.getLocation();
@@ -280,6 +353,9 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
             lang.send(player, "died-killed", "name", name(horse), "player", killer.getName(), "place", coords(at), "world", at.getWorld().getName());
         else lang.send(player, "died-at", "name", name(horse), "place", coords(at), "world", at.getWorld().getName());
     }
+
+    /** Healing time in the stable: stable-rest-minutes, or none while stable-rest.enabled is off. */
+    static long restMillis(int minutes, boolean on) { return on ? Math.max(0, minutes) * 60_000L : 0; }
 
     /** Block coordinates "x y z" for death notices. */
     static String coords(Location at) { return at.getBlockX() + " " + at.getBlockY() + " " + at.getBlockZ(); }
@@ -356,7 +432,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBreed(org.bukkit.event.entity.EntityBreedEvent event) {
         if (!(event.getEntity() instanceof AbstractHorse foal) || !(event.getFather() instanceof AbstractHorse sire) || !(event.getMother() instanceof AbstractHorse dam)) return;
-        claims.pedigree(foal, name(sire), name(dam), Math.max(claims.generation(sire), claims.generation(dam)));
+        if (on(Feature.BREEDING)) claims.pedigree(foal, name(sire), name(dam), Math.max(claims.generation(sire), claims.generation(dam)));
         if (!claimFoals || !(event.getBreeder() instanceof Player breeder) || petsHandle(foal)) return;
         if (breeder.getUniqueId().equals(claims.owner(sire)) && breeder.getUniqueId().equals(claims.owner(dam))) {
             claims.claim(foal, breeder);
@@ -367,6 +443,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
     }
 
     void rename(Player player, String[] args) {
+        if (off(player, Feature.RENAME)) return;
         if (args.length < 2) { lang.send(player, "usage-rename"); return; }
         AbstractHorse horse = ownTarget(player);
         if (horse == null) return;
@@ -381,6 +458,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
 
     /** Whistle: the animal you last rode comes to you if it is loaded (same world unless configured). */
     void call(Player player) {
+        if (off(player, Feature.CALL)) return;
         UUID id = lastRidden.get(player.getUniqueId());
         Entity entity = id == null ? null : Bukkit.getEntity(id);
         if (!(entity instanceof AbstractHorse horse) || !horse.isValid() || !player.getUniqueId().equals(claims.owner(horse))) { lang.send(player, "call-not-found"); return; }
@@ -389,6 +467,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
 
     /** Brings an owned, loaded animal to the player (/paddock call and the herd book). */
     void callAnimal(Player player, AbstractHorse horse) {
+        if (off(player, Feature.CALL)) return;
         if (Claims.pet(horse)) { lang.send(player, "pet-managed"); return; }
         if (!callAcrossWorlds && !horse.getWorld().equals(player.getWorld())) { lang.send(player, "call-other-world"); return; }
         if (disabledWorlds.contains(player.getWorld().getName().toLowerCase(Locale.ROOT))) { lang.send(player, "world-disabled"); return; }
@@ -418,6 +497,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
     }
 
     void openStable(Player player, String search, int page, StablePage.Sort sort) {
+        if (off(player, Feature.STABLE, Feature.STABLE_MENU)) return;
         if (!player.hasPermission("vystormpaddock.use")) { lang.send(player, "denied"); return; }
         if (panels != null && panels.openStable(player, search, page, sort)) return;
         openStableChest(player, search, page, sort);
@@ -446,6 +526,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
 
     /** /paddock herd: the herd book menu; /paddock herd stop ends the way-finder. */
     void herd(Player player, String[] args) {
+        if (off(player, Feature.HERD)) return;
         if (args.length >= 2 && args[1].equalsIgnoreCase("stop")) {
             lang.send(player, herdBook.stopTracking(player) ? "herd-track-stopped" : "herd-not-tracking");
             return;
@@ -464,50 +545,50 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
         return CommandSpec.command("paddock")
                 .aliases("stable")
                 .executes(ctx -> { if (ctx.sender() instanceof org.bukkit.entity.Player player && player.hasPermission("vystormpaddock.use")) p.openStable(player); else ctx.sender().sendMessage("/paddock help"); })
-                .sub("claim", s -> s.permission("vystormpaddock.use").playerOnly().executes(ctx -> p.claim(ctx.player())))
-                .sub("release", s -> s.permission("vystormpaddock.use").playerOnly().executes(ctx -> p.release(ctx.player())))
-                .sub("offer", s -> s.permission("vystormpaddock.trade").playerOnly().arg(Arg.playerName("player")).arg(Arg.word("price").optional())
+                .sub("claim", s -> gate(s, p, Feature.CLAIMS).permission("vystormpaddock.use").playerOnly().executes(ctx -> p.claim(ctx.player())))
+                .sub("release", s -> gate(s, p, Feature.CLAIMS).permission("vystormpaddock.use").playerOnly().executes(ctx -> p.release(ctx.player())))
+                .sub("offer", s -> gate(s, p, Feature.TRADE).permission("vystormpaddock.trade").playerOnly().arg(Arg.playerName("player")).arg(Arg.word("price").optional())
                         .executes(ctx -> p.offer(ctx.player(), ctx.get("player"), ctx.get("price"))))
-                .sub("accept", s -> s.permission("vystormpaddock.trade").playerOnly().executes(ctx -> p.accept(ctx.player())))
-                .sub("decline", s -> s.permission("vystormpaddock.trade").playerOnly().executes(ctx -> p.decline(ctx.player())))
-                .sub("trust", s -> s.permission("vystormpaddock.use").playerOnly().arg(Arg.playerName("player"))
+                .sub("accept", s -> gate(s, p, Feature.TRADE).permission("vystormpaddock.trade").playerOnly().executes(ctx -> p.accept(ctx.player())))
+                .sub("decline", s -> gate(s, p, Feature.TRADE).permission("vystormpaddock.trade").playerOnly().executes(ctx -> p.decline(ctx.player())))
+                .sub("trust", s -> gate(s, p, Feature.TRUST).permission("vystormpaddock.use").playerOnly().arg(Arg.playerName("player"))
                         .executes(ctx -> p.trust(ctx.player(), new String[]{"trust", ctx.get("player")}, true)))
-                .sub("untrust", s -> s.permission("vystormpaddock.use").playerOnly().arg(Arg.playerName("player"))
+                .sub("untrust", s -> gate(s, p, Feature.TRUST).permission("vystormpaddock.use").playerOnly().arg(Arg.playerName("player"))
                         .executes(ctx -> p.trust(ctx.player(), new String[]{"untrust", ctx.get("player")}, false)))
-                .sub("info", s -> s.permission("vystormpaddock.use").playerOnly().executes(ctx -> p.info(ctx.player())))
-                .sub("train",s->s.permission("vystormpaddock.train").playerOnly().arg(Arg.word("exercise").optional().suggests((ctx,prefix)->List.of(ctx.valueName("ride"),ctx.valueName("jump"),ctx.valueName("status"),ctx.valueName("stop"))))
+                .sub("info", s -> gate(s, p, Feature.INFO).permission("vystormpaddock.use").playerOnly().executes(ctx -> p.info(ctx.player())))
+                .sub("train",s->gate(s, p, Feature.TRAINING).permission("vystormpaddock.train").playerOnly().arg(Arg.word("exercise").optional().suggests((ctx,prefix)->List.of(ctx.valueName("ride"),ctx.valueName("jump"),ctx.valueName("status"),ctx.valueName("stop"))))
                         .executes(ctx->{String value=ctx.get("exercise");String translated=value==null?null:ctx.keyword(value,"ride","jump","status","stop");p.training.command(ctx.player(),translated==null?value:translated);}))
-                .sub("compare", s -> s.permission("vystormpaddock.use").playerOnly().executes(ctx -> p.compare(ctx.player())))
-                .sub("rename", s -> s.permission("vystormpaddock.use").playerOnly().arg(Arg.greedy("name"))
+                .sub("compare", s -> gate(s, p, Feature.INFO).permission("vystormpaddock.use").playerOnly().executes(ctx -> p.compare(ctx.player())))
+                .sub("rename", s -> gate(s, p, Feature.RENAME).permission("vystormpaddock.use").playerOnly().arg(Arg.greedy("name"))
                         .executes(ctx -> p.rename(ctx.player(), new String[]{"rename", ctx.get("name")})))
-                .sub("store", s -> s.permission("vystormpaddock.use").playerOnly().executes(ctx -> p.store(ctx.player())))
-                .sub("list", s -> s.permission("vystormpaddock.use").playerOnly().executes(ctx -> p.list(ctx.player())))
-                .sub("stable", s -> s.permission("vystormpaddock.use").playerOnly().arg(Arg.greedy("search").optional())
+                .sub("store", s -> gate(s, p, Feature.STABLE).permission("vystormpaddock.use").playerOnly().executes(ctx -> p.store(ctx.player())))
+                .sub("list", s -> gate(s, p, Feature.STABLE).permission("vystormpaddock.use").playerOnly().executes(ctx -> p.list(ctx.player())))
+                .sub("stable", s -> gate(gate(s, p, Feature.STABLE), p, Feature.STABLE_MENU).permission("vystormpaddock.use").playerOnly().arg(Arg.greedy("search").optional())
                         .executes(ctx -> {
                             if (ctx.get("search") == null) p.openStable(ctx.player());
                             else p.openStable(ctx.player(), ctx.get("search"), 0);
                         }))
-                .sub("summon", s -> s.permission("vystormpaddock.use").playerOnly()
+                .sub("summon", s -> gate(s, p, Feature.STABLE).permission("vystormpaddock.use").playerOnly()
                         .arg(Arg.greedy("animal").optional().suggests((ctx, prefix) -> p.stableNames(ctx.player(), prefix)))
                         .executes(ctx -> {
                             String animal = ctx.get("animal");
                             p.summon(ctx.player(), animal == null ? new String[]{"summon"} : new String[]{"summon", animal});
                         }))
-                .sub("call", s -> s.permission("vystormpaddock.use").playerOnly().executes(ctx -> p.call(ctx.player())))
-                .sub("herd", s -> s.permission("vystormpaddock.use").playerOnly()
+                .sub("call", s -> gate(s, p, Feature.CALL).permission("vystormpaddock.use").playerOnly().executes(ctx -> p.call(ctx.player())))
+                .sub("herd", s -> gate(s, p, Feature.HERD).permission("vystormpaddock.use").playerOnly()
                         .arg(Arg.greedy("stop").optional().suggests((ctx, prefix) -> List.of(ctx.valueName("stop"))))
                         .executes(ctx -> p.herd(ctx.player(), ctx.get("stop") != null && ctx.keyword(ctx.get("stop"), "stop") != null)))
-                .sub("bet", s -> s.permission("vystormpaddock.bet").playerOnly()
+                .sub("bet", s -> gate(s, p, Feature.BETTING).permission("vystormpaddock.bet").playerOnly()
                         .arg(Arg.playerName("rider").optional()).arg(Arg.word("side").optional().suggests(List.of("beat", "miss"))).arg(Arg.word("amount").optional().suggests((ctx, prefix) -> betAmounts(p.getConfig().getDouble("betting.min", 10), p.getConfig().getDouble("betting.max", 1000), prefix)))
                         .executes(ctx -> p.bet(ctx.player(), ctx.get("rider"), ctx.get("side"), ctx.get("amount"))))
-                .sub("race", s -> s.permission("vystormpaddock.use").playerOnly()
+                .sub("race", s -> gate(s, p, Feature.RACES).permission("vystormpaddock.use").playerOnly()
                         .arg(Arg.greedy("course").optional().suggests((ctx, prefix) -> {
                             List<String> out = new ArrayList<>(p.courseNames(prefix, true));
                             out.add(ctx.valueName("stop"));
                             return out;
                         }))
                         .executes(ctx -> p.race(ctx.player(), ctx.get("course"), ctx.keyword(ctx.get("course"), "stop") != null)))
-                .sub("course", s -> s.permission("vystormpaddock.course").playerOnly()
+                .sub("course", s -> gate(gate(s, p, Feature.RACES), p, Feature.COURSES).permission("vystormpaddock.course").playerOnly()
                         .sub("create", c -> c.arg(Arg.word("course")).executes(ctx -> p.course(ctx.player(), "create", ctx.get("course"), null)))
                         .sub("point", c -> c.arg(courseArg(p)).executes(ctx -> p.course(ctx.player(), "point", ctx.get("course"), null)))
                         .sub("undo", c -> c.arg(courseArg(p)).executes(ctx -> p.course(ctx.player(), "undo", ctx.get("course"), null)))
@@ -517,6 +598,14 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
                         .sub("delete", c -> c.arg(courseArg(p)).executes(ctx -> p.course(ctx.player(), "delete", ctx.get("course"), null))))
                 .sub("reload", s -> s.permission("vystormpaddock.admin").executes(ctx -> p.reload(ctx.sender())))
                 .build();
+    }
+
+    /**
+     * Keeps a subcommand out of help and tab completion while its switch (or claims.enabled) is off, asked at every
+     * completion so a switch applies at once; it still answers the off message.
+     */
+    static CommandSpec.Builder gate(CommandSpec.Builder sub, PaddockPlugin p, Feature feature) {
+        return p == null ? sub : sub.visibleWhen(() -> enabled(p, feature));
     }
 
     /** Tab completion for the stake of {@code /paddock bet}: the configured minimum and maximum, as the bet check applies them. */
@@ -570,7 +659,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
 
     private final RaceBets bets = new RaceBets();
 
-    boolean betsEnabled() { return getConfig().getBoolean("betting.enabled", true) && economy() != null; }
+    boolean betsEnabled() { return on(Feature.BETTING) && getConfig().getBoolean(Feature.BETTING.path, true) && economy() != null; }
     private double houseCut() { return Math.clamp(getConfig().getDouble("betting.house-cut", 0.05), 0, 0.5); }
     private static long best(Races.Course course, UUID rider) { Races.Time time = course.times().get(rider); return time == null ? -1 : time.millis(); }
     private String target(Player viewer, long best) { return best < 0 ? lang.plain(viewer, "bet.target-finish") : Races.time(best); }
@@ -619,7 +708,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
 
     /** Writes every settled bet to data/bet-log.csv and tells admins online about bets that look arranged. Nothing is blocked. */
     private void logBets(RaceBets.Book book, long millis, RaceBets.Side winner, Map<UUID, Double> pay) {
-        if (!getConfig().getBoolean("betting.log", true)) return;
+        if (!getConfig().getBoolean(Feature.BET_LOG.path, true)) return;
         long now = System.currentTimeMillis();
         StringBuilder lines = new StringBuilder();
         for (RaceBets.Bet bet : book.bets) {
@@ -663,7 +752,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
 
     /** {@code /paddock bet [rider beat|miss amount]}: without arguments lists open books. */
     void bet(Player player, String riderName, String sideText, String amountText) {
-        if (!getConfig().getBoolean("betting.enabled", true)) { lang.send(player, "bet.disabled"); return; }
+        if (!on(Feature.BETTING) || !getConfig().getBoolean(Feature.BETTING.path, true)) { lang.send(player, "feature-off"); return; }
         var economy = economy();
         if (economy == null) { lang.send(player, "bet.no-economy"); return; }
         double cut = houseCut();
@@ -699,7 +788,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
 
     private final TradeOffers offers = new TradeOffers();
 
-    boolean tradeEnabled() { return getConfig().getBoolean("trade.enabled", true); }
+    boolean tradeEnabled() { return on(Feature.TRADE) && getConfig().getBoolean(Feature.TRADE.path, true); }
 
     private Vystorm.vystorm_core._integrations.vault.VaultInterface economy() {
         try { var vault = core.vault(); return vault != null && vault.isEconomyAvailable() ? vault : null; }
@@ -708,7 +797,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
 
     /** {@code /paddock offer <player> [price]}: offers the animal you look at or ride to another player. */
     void offer(Player seller, String buyerName, String priceText) {
-        if (!tradeEnabled()) { lang.send(seller, "trade.disabled"); return; }
+        if (!tradeEnabled()) { lang.send(seller, "feature-off"); return; }
         AbstractHorse horse = ownTarget(seller);
         if (horse == null) return;
         if (!seller.getUniqueId().equals(claims.owner(horse))) { lang.send(seller, "trade.not-owner"); return; }
@@ -735,6 +824,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
 
     /** {@code /paddock accept}: takes the open offer, pays the price through Vault and moves the claim. */
     void accept(Player buyer) {
+        if (!tradeEnabled()) { lang.send(buyer, "feature-off"); return; }
         long now = System.currentTimeMillis();
         var open = offers.take(buyer.getUniqueId(), now);
         if (open.isEmpty()) { lang.send(buyer, "trade.none"); return; }
@@ -766,6 +856,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
     }
 
     void decline(Player buyer) {
+        if (!tradeEnabled()) { lang.send(buyer, "feature-off"); return; }
         var open = offers.take(buyer.getUniqueId(), System.currentTimeMillis());
         if (open.isEmpty()) { lang.send(buyer, "trade.none"); return; }
         lang.send(buyer, "trade.declined", "name", open.get().animalName());
@@ -789,6 +880,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
     }
 
     void claim(Player player) {
+        if (off(player, Feature.CLAIMS)) return;
         AbstractHorse horse = target(player);
         if (horse == null) { lang.send(player, "no-target"); return; }
         if (Claims.pet(horse)) { lang.send(player, "pet-managed"); return; }
@@ -807,6 +899,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
     }
 
     void release(Player player) {
+        if (off(player, Feature.CLAIMS)) return;
         AbstractHorse horse = ownTarget(player);
         if (horse == null) return;
         herdBook.forget(claims.owner(horse), horse.getUniqueId());
@@ -815,6 +908,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
     }
 
     void trust(Player player, String[] args, boolean add) {
+        if (off(player, Feature.TRUST)) return;
         if (args.length < 2) { lang.send(player, "usage-trust"); return; }
         AbstractHorse horse = ownTarget(player);
         if (horse == null) return;
@@ -827,9 +921,10 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
         lang.send(player, add ? "trusted" : "untrusted", "player", other.getName() == null ? args[1] : other.getName(), "name", name(horse));
     }
 
-    void compare(Player player) { HorseComparison.show(core.compat(), player, lang, (int) Math.ceil(reach)); }
+    void compare(Player player) { if (off(player, Feature.INFO)) return; HorseComparison.show(core.compat(), player, lang, (int) Math.ceil(reach)); }
 
     void info(Player player) {
+        if (off(player, Feature.INFO)) return;
         AbstractHorse horse = target(player);
         if (horse == null) { lang.send(player, "no-target"); return; }
         String owner = claims.claimed(horse) ? claims.ownerName(horse) : "-";
@@ -840,11 +935,12 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
         }
         lang.send(player, "info", "name", name(horse), "owner", owner, "trusted", names.isEmpty() ? "-" : String.join(", ", names), "stats", stats(horse));
         String[] parents = claims.parents(horse);
-        lang.send(player, "info-breeding", "rating", Integer.toString(rating(attribute(horse, core.compat().server().attribute("MOVEMENT_SPEED", "GENERIC_MOVEMENT_SPEED")), attribute(horse, core.compat().server().attribute("JUMP_STRENGTH", "GENERIC_JUMP_STRENGTH")), attribute(horse, core.compat().server().attribute("MAX_HEALTH", "GENERIC_MAX_HEALTH")))),
+        if (on(Feature.BREEDING)) lang.send(player, "info-breeding", "rating", Integer.toString(rating(attribute(horse, core.compat().server().attribute("MOVEMENT_SPEED", "GENERIC_MOVEMENT_SPEED")), attribute(horse, core.compat().server().attribute("JUMP_STRENGTH", "GENERIC_JUMP_STRENGTH")), attribute(horse, core.compat().server().attribute("MAX_HEALTH", "GENERIC_MAX_HEALTH")))),
                 "sire", parents == null ? "-" : parents[0], "dam", parents == null ? "-" : parents[1], "generation", Integer.toString(claims.generation(horse)));
     }
 
     void store(Player player) {
+        if (off(player, Feature.STABLE)) return;
         AbstractHorse horse = ownTarget(player);
         if (horse == null) return;
         if (Claims.pet(horse)) { lang.send(player, "pet-managed"); return; }
@@ -871,6 +967,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
     }
 
     void list(Player player) {
+        if (off(player, Feature.STABLE)) return;
         try {
             List<Stable.Stored> animals = stable.list(player.getUniqueId());
             lang.send(player, "list-header", "count", Integer.toString(animals.size()), "max", Integer.toString(slots(player)));
@@ -893,13 +990,14 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
     }
 
     private void summon(Player player, String[] args, String id) {
+        if (off(player, Feature.STABLE)) return;
         if (!player.hasPermission("vystormpaddock.use")) { lang.send(player, "denied"); return; }
         if (id == null && args.length < 2) {
             // no argument: a single stabled animal comes right away, several open the stable menu
             try {
                 List<Stable.Stored> animals = stable.list(player.getUniqueId());
                 if (animals.isEmpty()) { lang.send(player, "list-empty"); return; }
-                if (animals.size() > 1) { openStable(player); return; }
+                if (animals.size() > 1) { if (on(Feature.STABLE_MENU)) openStable(player); else list(player); return; }
                 args = new String[]{"summon", "1"};
             } catch (IOException failure) {
                 getLogger().log(Level.WARNING, "Could not read stable of " + player.getName(), failure);

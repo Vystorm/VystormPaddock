@@ -78,6 +78,9 @@ final class RaceTracker implements Listener {
 
     boolean enabled() { return enabled; }
 
+    /** The courses and times, for placeholders. */
+    Races races() { return races; }
+
     void start() {
         tasks = core.tasks().of(plugin, "races");
         tasks.timer(1, 1, this::tick);
@@ -186,7 +189,7 @@ final class RaceTracker implements Listener {
 
     /** /paddock race [NAME|stop] */
     void race(Player player, String[] args) {
-        if (!enabled) { lang().send(player, "race-disabled"); return; }
+        if (!enabled) { lang().send(player, "feature-off"); return; }
         if (!player.hasPermission("vystormpaddock.race")) { lang().send(player, "denied"); return; }
         if (args.length < 2) { open(player); return; }
         if (args[1].equalsIgnoreCase("stop")) {
@@ -200,7 +203,7 @@ final class RaceTracker implements Listener {
     /** Resolve a fresh course directly, including courses whose names also happen to be command keywords. */
     void showCourse(Player player, String name) {
         if (!plugin.isEnabled() || !player.isOnline() || !player.hasPermission("vystormpaddock.race")) { lang().send(player, "denied"); return; }
-        if (!enabled) { lang().send(player, "race-disabled"); return; }
+        if (!enabled) { lang().send(player, "feature-off"); return; }
         Races.Course course = races.get(name);
         if (course == null || !course.ready()) { lang().send(player, "race-unknown", "course", name); return; }
         info(player, course);
@@ -236,13 +239,13 @@ final class RaceTracker implements Listener {
 
     void open(Player player) {
         if (!player.hasPermission("vystormpaddock.race")) { lang().send(player, "denied"); return; }
-        if (!enabled) { lang().send(player, "race-disabled"); return; }
+        if (!enabled) { lang().send(player, "feature-off"); return; }
         if (!plugin.openPanel(player, "races")) openChest(player);
     }
 
     void openChest(Player player) {
         if (!player.hasPermission("vystormpaddock.race")) { lang().send(player, "denied"); return; }
-        if (!enabled) { lang().send(player, "race-disabled"); return; }
+        if (!enabled) { lang().send(player, "feature-off"); return; }
         List<Races.Course> courses = readyCourses();
         if (courses.isEmpty()) { lang().send(player, "race-none"); return; }
         Menu holder = new Menu();
@@ -290,6 +293,7 @@ final class RaceTracker implements Listener {
 
     /** /paddock course create|point|undo|radius|reset|delete NAME */
     void course(Player player, String[] args) {
+        if (!enabled || !PaddockPlugin.enabled(plugin, Feature.COURSES)) { lang().send(player, "feature-off"); return; }
         if (!player.hasPermission("vystormpaddock.course")) { lang().send(player, "denied"); return; }
         if (args.length < 3) { lang().send(player, "usage-course"); return; }
         String action = args[1].toLowerCase(Locale.ROOT), name = args[2];

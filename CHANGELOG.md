@@ -1,3 +1,20 @@
+## 1.18.0 — 2026-11-18
+
+- Requires Vystorm Core 0.65.0 or newer. Update Core before you update this plugin.
+- Every feature can now be switched on and off in `config.yml`. A server that updates keeps working as before: the new switches are on, `protect-from-environment` and `call-across-worlds` stay off as they shipped, and the new keys are added to your existing `config.yml` with their comments. Each switch is listed in Core's `/vadmin features` with a one-line description in seven languages and applies at once, without a restart (only `tutorial.enabled` needs one).
+  - The whole plugin: `claims.enabled`. Off: claimed animals are not protected (their claim stays on the animal), no menu, race, bet, trade or training runs, and every `/paddock` command except `reload` is switched off.
+  - Animals: `trust.enabled`, `info.enabled` (info and compare), `death-notices.enabled`, `call.enabled`, `rename.enabled`, `breeding-records.enabled`, `pets-protection.enabled` (off: animals of Vystorm Pets are not protected by Paddock).
+  - Stable: `stable.enabled` (store, summon, list), `stable-menu.enabled`, `stable-rest.enabled` (off: no healing in the stable).
+  - Races: `races.course-editor.enabled` (off: courses cannot be built or changed; they stay saved).
+  - Tutorial: `tutorial.enabled` (needs a restart).
+  - Keys that already existed keep their names and are now listed as switches too: `auto-claim-on-tame`, `protect-from-environment`, `mount-on-summon`, `call-across-worlds`, `claim-foals`, `races.announce-records`, `races.show-checkpoints`, `betting.log`.
+- A switched-off feature answers one shared message, "This feature is switched off on this server.", in all seven languages (new language key `feature-off`), and its subcommands are hidden from help and tab completion. Claims, stables, herd books, races, bets and training stay saved and work again when the switch is back on.
+- Tab completion and help follow a switch at once, without registering the command again.
+- Fixed: `/paddock course` worked while `races.enabled` was off; it now answers that the feature is switched off.
+- Placeholders: the plugin registers its values with Vystorm Core under the namespace `paddock`: stable slots and stored animals, the training levels and the owner of the animal the player rides, the player's best time and place on a course, the course record and the number of ready courses. Examples: `%vystorm_paddock_stable_stored%` and `{paddock:race_best:Meadow}` (the player's best time on the course Meadow). `/vadmin placeholders paddock` lists them. A value of a switched-off feature is empty.
+- The off messages of the herd book, races, betting and trade are now the shared message.
+- README: the introduction comes first again, the compatibility line says what the build checks, and a broken character in the breeding score line was fixed.
+
 ## 1.17.0 — 2026-11-17
 
 - Requires Vystorm Core 0.64.0 or newer. Update Core before you update this plugin.

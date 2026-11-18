@@ -128,7 +128,7 @@ final class HerdBook implements Listener {
 
     void open(Player player) {
         if (!player.hasPermission("vystormpaddock.use")) { plugin.lang().send(player, "denied"); return; }
-        if (!enabled) { plugin.lang().send(player, "herd-disabled"); return; }
+        if (!enabled) { plugin.lang().send(player, "feature-off"); return; }
         if (!plugin.openPanel(player, "herd")) openChest(player);
     }
 
@@ -157,7 +157,7 @@ final class HerdBook implements Listener {
     void openChest(Player player) {
         Lang lang = plugin.lang();
         if (!player.hasPermission("vystormpaddock.use")) { lang.send(player, "denied"); return; }
-        if (!enabled) { lang.send(player, "herd-disabled"); return; }
+        if (!enabled) { lang.send(player, "feature-off"); return; }
         try {
             List<Herd.Entry> entries = herd.list(player.getUniqueId());
             if (entries.isEmpty()) { lang.send(player, "herd-empty"); return; }

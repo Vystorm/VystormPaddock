@@ -44,7 +44,7 @@ final class AnimalTraining implements Listener {
     }
     void configure() {
         var config = plugin.getConfig();
-        enabled = config.getBoolean("training.enabled", true);
+        enabled = config.getBoolean("training.enabled", true) && PaddockPlugin.enabled(plugin, Feature.CLAIMS);
         levels = Math.clamp(config.getInt("training.max-level", 5), 1, 10);
         rideTarget = Math.clamp(config.getLong("training.ride-metres", 300), 4, 10000) * 1000;
         jumpTarget = Math.clamp(config.getInt("training.jumps", 12), 1, 1000);
@@ -65,6 +65,7 @@ final class AnimalTraining implements Listener {
                 && player.getUniqueId().equals(plugin.claims().owner(horse));
     }
     void command(Player player, String action) {
+        if (!enabled) { plugin.lang().send(player, "feature-off"); return; }
         if ("stop".equals(action)) {
             sessions.remove(player.getUniqueId());
             plugin.lang().send(player, "training-stopped");
