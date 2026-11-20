@@ -22,14 +22,22 @@ public final class Herd {
     /** One animal out in the world. */
     public record Entry(UUID id, String name, String type, String world, double x, double y, double z, long seen) {}
 
-    /** Most entries kept per player; the longest unseen ones drop out first. */
+    /** Most entries kept per player by default ({@code herd-book.max-animals}); the longest unseen ones drop out first. */
     static final int MAX = 200;
+    /** Highest value {@code herd-book.max-animals} may set. */
+    static final int MAX_LIMIT = 10_000;
     /** Moves shorter than this (blocks) are kept in memory only. */
     static final double SAVE_DISTANCE = 4;
 
     private final Path folder;
     private final Vystorm.vystorm_core._coreMethods.dataStorage.AtomicFilesInterface files;
     private final Map<UUID, Map<UUID, Entry>> cache = new HashMap<>();
+    private volatile int max = MAX;
+
+    /** Sets the most entries kept per player (1 to {@link #MAX_LIMIT}); a smaller book shrinks at its next new entry (1.18.2). */
+    void max(int limit) { max = Math.clamp(limit, 1, MAX_LIMIT); }
+
+    int max() { return max; }
 
     /** @param files Core's file part, {@code api.data().files()} */
     public Herd(Path folder, Vystorm.vystorm_core._coreMethods.dataStorage.AtomicFilesInterface files) { this.folder = folder; this.files = files; }
@@ -50,10 +58,11 @@ public final class Herd {
         Map<UUID, Entry> book = book(player);
         Entry old = book.put(entry.id(), entry);
         if (!worthSaving(old, entry)) return;
-        if (book.size() > MAX) {
+        int limit = max;
+        if (book.size() > limit) {
             List<Entry> byAge = new ArrayList<>(book.values());
             byAge.sort((a, b) -> Long.compare(a.seen(), b.seen()));
-            for (int i = 0; i < byAge.size() - MAX; i++) book.remove(byAge.get(i).id());
+            for (int i = 0; i < byAge.size() - limit; i++) book.remove(byAge.get(i).id());
         }
         save(player, book);
     }

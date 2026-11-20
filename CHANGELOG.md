@@ -1,3 +1,8 @@
+## 1.18.2 — 2026-11-20
+
+- New value `herd-book.max-animals` (default 200, as before; 1 to 10000): the most animals one player's herd book keeps. Breeders with more claimed animals no longer lose the oldest entries once the server raises it. It is added to your existing `config.yml` with its comment and applies on reload.
+- A lower value shrinks a herd book the next time a new animal joins it; the animals unseen for the longest time drop out first, as with the old fixed limit.
+
 ## 1.18.1 — 2026-11-20
 
 - `/paddock reload` with a YAML syntax error in `config.yml` keeps the last working settings instead of falling back to the defaults, and answers with the line and column of the error (also shown in the console, as on start). The file is never changed.

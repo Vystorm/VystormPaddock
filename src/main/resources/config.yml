@@ -86,6 +86,8 @@ herd-book:
   enabled: true
   # How long the action bar compass points the way before it stops by itself.
   track-seconds: 120
+  # Most animals one player's herd book keeps (1 to 10000). Above it, the animals unseen for the longest time drop out.
+  max-animals: 200
 
 # Time trials on horseback (/paddock race). Courses are built by players with vystormpaddock.course (/paddock course).
 races:

@@ -56,6 +56,7 @@ Positions are noted when an animal is claimed, dismounted, renamed or summoned a
 herd-book:
   enabled: true
   track-seconds: 120   # how long the arrow keeps pointing
+  max-animals: 200     # most animals one player's book keeps; the longest unseen drop out first
 ```
 
 ## Horse races

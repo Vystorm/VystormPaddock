@@ -69,6 +69,36 @@ class HerdAndRacesTest {
     }
 
     @Test
+    void givenAHigherMaxAnimalsWhenABreederHasMoreThan200ThenNoneIsDropped() throws Exception {
+        UUID player = UUID.randomUUID(), oldest = UUID.randomUUID();
+        Herd herd = new Herd(folder, Vystorm.vystorm_core._coreMethods.dataStorage.AtomicFilesInterface.DEFAULT);
+        herd.max(500);
+        herd.put(player, entry(oldest, "Old", 0, 0));
+        for (int i = 1; i <= 300; i++) herd.put(player, entry(UUID.randomUUID(), "H" + i, 0, i));
+        assertEquals(301, herd.list(player).size());
+        org.junit.jupiter.api.Assertions.assertNotNull(herd.get(player, oldest));
+        assertEquals(301, new Herd(folder, Vystorm.vystorm_core._coreMethods.dataStorage.AtomicFilesInterface.DEFAULT).list(player).size(), "written, not only cached");
+
+        herd.max(100); // a smaller value shrinks the book at its next new entry
+        herd.put(player, entry(UUID.randomUUID(), "New", 0, 400));
+        assertEquals(100, herd.list(player).size());
+        assertNull(herd.get(player, oldest));
+        herd.max(0);
+        assertEquals(1, herd.max(), "the value is kept in range");
+        herd.max(1_000_000);
+        assertEquals(Herd.MAX_LIMIT, herd.max());
+    }
+
+    @Test
+    void givenTheShippedConfigThenTheHerdBookKeeps200AnimalsAsBefore() throws Exception {
+        try (var in = getClass().getResourceAsStream("/config.yml")) {
+            var yaml = org.bukkit.configuration.file.YamlConfiguration.loadConfiguration(new java.io.InputStreamReader(in, java.nio.charset.StandardCharsets.UTF_8));
+            assertEquals(Herd.MAX, yaml.getInt("herd-book.max-animals", -1));
+        }
+        assertEquals(200, Herd.MAX);
+    }
+
+    @Test
     void herdBookSkipsBrokenIds() throws Exception {
         UUID player = UUID.randomUUID(), good = UUID.randomUUID();
         Files.writeString(folder.resolve(player + ".yml"), "schema: 1\nanimals:\n  nonsense:\n    name: X\n  " + good + ":\n    name: Good\n    world: w\n    x: 1\n");

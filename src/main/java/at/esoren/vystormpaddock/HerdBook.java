@@ -58,6 +58,11 @@ final class HerdBook implements Listener {
         this.herd = herd;
     }
 
+    void configure(boolean enabled, int trackSeconds, int maxAnimals) {
+        herd.max(maxAnimals);
+        configure(enabled, trackSeconds);
+    }
+
     void configure(boolean enabled, int trackSeconds) {
         this.enabled = enabled;
         this.trackMillis = Math.max(10, trackSeconds) * 1000L;

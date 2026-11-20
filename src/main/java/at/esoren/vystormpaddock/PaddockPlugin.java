@@ -212,7 +212,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
         for (String world : getConfig().getStringList("disabled-worlds")) worlds.add(world.toLowerCase(Locale.ROOT));
         disabledWorlds = Set.copyOf(worlds);
         training.configure();
-        herdBook.configure(on(Feature.HERD), getConfig().getInt("herd-book.track-seconds", 120));
+        herdBook.configure(on(Feature.HERD), getConfig().getInt("herd-book.track-seconds", 120), getConfig().getInt("herd-book.max-animals", Herd.MAX));
         raceTracker.configure(on(Feature.RACES), getConfig().getInt("races.max-minutes", 10),
                 getConfig().getDouble("races.default-radius", 4), on(Feature.RECORD_ANNOUNCEMENTS), on(Feature.CHECKPOINTS));
         // help and tab completion ask the switches live; only send online players their command list again
