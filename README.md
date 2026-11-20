@@ -16,13 +16,15 @@
 - Works next to Vystorm Pets: horses, donkeys, llamas and camels that are pets stay with Pets (taming, storing, summoning); Paddock just protects them for their owner and handles mules, trader llamas and undead horses.
 - **Herd book**: `/paddock herd` lists every claimed animal you have out in the world – where it was last seen and how far away it is. Click to get an arrow to it, right click to call it over.
 - **Horse races**: time trials with checkpoints, personal bests, a top 10 per course and record announcements. `/paddock race` opens the course list.
+- **Race betting** (needs a Vault economy): while a rider waits in a course's start circle, players nearby bet with `/paddock bet <rider> beat|miss <amount>` whether the rider beats their own best time; `/paddock bet` lists open books. Settled bets go to `data/bet-log.csv` (`betting.log`).
 - Ownership is stored on the animal itself, stables in one small file per player. No database; Vystorm Core is required.
 - Texts in English, German, Simplified Chinese, French, Brazilian Portuguese, Italian and Russian through the Vystorm Core language system; `config.yml` is editable in game with `/vadmin config`.
 - Needs [Vystorm Core](https://www.spigotmc.org/resources/139848/) 0.65.0 or newer (free). What the build checks: Java 21 bytecode (`--release 21`), compiled against the Paper API 1.21.11 and, in `compat1206`, against Paper 1.20.6, with isolated tests against the 1.20.6 API. Use the Java version your server needs.
+- Tested on Paper and Purpur 26.2, Paper 1.20.6 and Spigot 26.2.
 
 ## Animal trade (1.14.0)
 
-`/paddock offer <player> [price]` sells or gifts the claimed animal you look at or ride; the other player accepts with a click (`/paddock accept`). Prices use Vault.
+`/paddock offer <player> [price]` sells or gifts the claimed animal you look at or ride; the other player accepts with a click (`/paddock accept`) or declines (`/paddock decline`). Prices use Vault.
 
 ## Animal training (1.11.0)
 
@@ -75,7 +77,7 @@ races:
 
 ## Switches
 
-Every feature has an on/off switch in `config.yml` (listed in Vystorm Core's `/vadmin features`, applied without a restart except `tutorial.enabled`; all on by default except `protect-from-environment` and `call-across-worlds`, which shipped off): `claims.enabled` (the whole plugin), `auto-claim-on-tame`, `protect-from-environment`, `trust.enabled`, `stable.enabled`, `stable-menu.enabled`, `stable-rest.enabled`, `mount-on-summon`, `info.enabled`, `death-notices.enabled`, `call.enabled`, `call-across-worlds`, `rename.enabled`, `breeding-records.enabled`, `claim-foals`, `pets-protection.enabled`, `herd-book.enabled`, `races.enabled`, `races.course-editor.enabled`, `races.announce-records`, `races.show-checkpoints`, `betting.enabled`, `betting.log`, `training.enabled`, `trade.enabled`, `tutorial.enabled`. A switched-off feature answers "This feature is switched off on this server."; claims, stables, herd books, races and training stay saved.
+Every feature has an on/off switch in `config.yml` (listed in Vystorm Core's `/vadmin features`, applied without a restart except `tutorial.enabled`; all on by default except `protect-from-environment` and `call-across-worlds`, which shipped off): `claims.enabled` (the whole plugin), `auto-claim-on-tame`, `protect-from-environment`, `trust.enabled`, `stable.enabled`, `stable-menu.enabled`, `stable-rest.enabled`, `mount-on-summon`, `info.enabled`, `death-notices.enabled`, `call.enabled`, `call-across-worlds`, `rename.enabled`, `breeding-records.enabled`, `claim-foals`, `pets-protection.enabled`, `herd-book.enabled`, `races.enabled`, `races.course-editor.enabled`, `races.announce-records`, `races.show-checkpoints`, `betting.enabled`, `betting.log`, `training.enabled`, `trade.enabled`, `tutorial.enabled`. A switched-off feature answers "This feature is switched off on this server."; a command whose own switch is on but which needs another one names that switch (`/paddock course` and `/paddock bet` need `races.enabled`, the stable menu needs `stable.enabled`); claims, stables, herd books, races and training stay saved.
 
 ## Placeholders
 

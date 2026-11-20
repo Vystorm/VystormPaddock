@@ -236,6 +236,7 @@ class SwitchesTest {
         YamlConfiguration config = new YamlConfiguration();
         doReturn(config).when(paddock).getConfig();
         doNothing().when(paddock).reloadConfig();
+        doReturn(true).when(paddock).readConfig(); // config.yml parsed
         var load = PaddockPlugin.class.getDeclaredMethod("load");
         load.setAccessible(true);
         load.invoke(paddock);
@@ -256,6 +257,48 @@ class SwitchesTest {
         when(player.hasPermission(anyString())).thenReturn(true);
         tracker.course(player, new String[]{"course", "create", "track"});
         verify(lang(paddock)).send(player, "feature-off");
+    }
+
+    @Test void givenRacesOff_whenACourseIsBuilt_thenTheAnswerNamesTheSwitchItNeeds() throws Exception {
+        PaddockPlugin paddock = plugin(Feature.RACES);
+        RaceTracker tracker = new RaceTracker(paddock, mock(API.class), new Races(dir.resolve("races.yml"), Vystorm.vystorm_core._coreMethods.dataStorage.AtomicFilesInterface.DEFAULT));
+        Field enabled = RaceTracker.class.getDeclaredField("enabled"); // as configure(on(RACES), ...) leaves it
+        enabled.setAccessible(true);
+        enabled.set(tracker, false);
+        when(paddock.lang()).thenReturn(lang(paddock));
+        Player player = mock(Player.class);
+        when(player.hasPermission(anyString())).thenReturn(true);
+        when(lang(paddock).plain(player, Feature.RACES.label())).thenReturn("Races");
+        tracker.course(player, new String[]{"course", "create", "track"});
+        verify(lang(paddock)).send(player, "feature-needs", "switch", "races.enabled", "name", "Races");
+    }
+
+    @Test void givenADependencyOff_whenTheCommandRuns_thenTheAnswerNamesTheSwitchItNeeds() throws Exception {
+        Map<Feature, BiConsumer<PaddockPlugin, Player>> actions = new LinkedHashMap<>();
+        actions.put(Feature.STABLE, PaddockPlugin::openStable);              // the stable menu needs the stable
+        actions.put(Feature.RACES, (p, player) -> p.bet(player, null, null, null)); // bets are placed on races
+        for (var entry : actions.entrySet()) {
+            PaddockPlugin paddock = plugin(entry.getKey());
+            Player player = mock(Player.class);
+            when(player.getUniqueId()).thenReturn(UUID.randomUUID());
+            when(lang(paddock).plain(player, entry.getKey().label())).thenReturn("Name of " + entry.getKey().path);
+            entry.getValue().accept(paddock, player);
+            verify(lang(paddock)).send(player, "feature-needs", "switch", entry.getKey().path, "name", "Name of " + entry.getKey().path);
+        }
+    }
+
+    @Test void givenOnlyTheNeededSwitchOff_whenTheCommandTreeIsBuilt_thenCourseAndStableStayListedToNameIt() throws Exception {
+        PaddockPlugin paddock = plugin(Feature.RACES, Feature.STABLE);
+        CommandSpec tree = PaddockPlugin.commandSpec(paddock);
+        assertTrue(tree.children().get("course").visibleTo(null));
+        assertTrue(tree.children().get("stable").visibleTo(null));
+        assertFalse(tree.children().get("race").visibleTo(null));
+        assertFalse(tree.children().get("store").visibleTo(null));
+    }
+
+    @Test void givenEveryLanguage_whenRead_thenTheNeedsMessageNamesTheSwitch() {
+        for (String code : List.of("en", "de", "fr", "it", "pt_br", "ru", "zh_cn"))
+            assertTrue(YamlConfiguration.loadConfiguration(new java.io.File("src/main/resources/lang/" + code + ".yml")).getString("feature-needs", "").matches(".*\\{name}.*\\{switch}.*"), code);
     }
 
     // ------------------------------------------------------------------ trust and pets on the claims

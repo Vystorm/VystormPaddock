@@ -1,3 +1,10 @@
+## 1.18.1 — 2026-11-20
+
+- `/paddock reload` with a YAML syntax error in `config.yml` keeps the last working settings instead of falling back to the defaults, and answers with the line and column of the error (also shown in the console, as on start). The file is never changed.
+- `/vadmin features` shows every switch of the plugin with a readable name in the admin's language, for example "Course building" and "Checkpoint particles", instead of a name built from the config key such as "Races › Show checkpoints". The names exist in all seven languages.
+- Commands that need another switch say which one: `/paddock course` and `/paddock bet` with `races.enabled` off, and `/paddock stable` (also plain `/paddock`) with `stable.enabled` off, answer "This needs “Horse races” (races.enabled), which is switched off on this server." (or “Virtual stable” (stable.enabled)). Before, `/paddock course` and `/paddock stable` vanished from help and typing them gave "unknown subcommand", and `/paddock bet` listed no books without saying why.
+- README: describes race betting and `/paddock decline`, and names the platforms the plugin was tested on (Paper and Purpur 26.2, Paper 1.20.6, Spigot 26.2).
+
 ## 1.18.0 — 2026-11-18
 
 - Requires Vystorm Core 0.65.0 or newer. Update Core before you update this plugin.

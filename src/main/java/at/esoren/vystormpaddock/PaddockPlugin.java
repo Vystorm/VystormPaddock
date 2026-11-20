@@ -94,6 +94,13 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
         return false;
     }
 
+    /** True (and the switch named) when a feature this one depends on is switched off. */
+    private boolean needs(CommandSender sender, Feature needed) {
+        if (on(needed)) return false;
+        lang.send(sender, "feature-needs", "switch", needed.path, "name", lang.plain(sender, needed.label()));
+        return true;
+    }
+
     /** Animal types Vystorm Pets takes over on taming; with Pets installed Paddock leaves them to Pets. */
     private static final Set<org.bukkit.entity.EntityType> PET_TYPES = Set.of(org.bukkit.entity.EntityType.HORSE, org.bukkit.entity.EntityType.DONKEY,
             org.bukkit.entity.EntityType.LLAMA, org.bukkit.entity.EntityType.CAMEL);
@@ -127,7 +134,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
         raceTracker.start();
         registerMenus();
         core.settings().config().register(this, "config.yml", this::load);
-        declareSwitches();
+        declareSwitches(core.settings().config(), this, lang);
         try { registerPlaceholders(core.placeholders()); }
         catch (RuntimeException failure) { getLogger().log(Level.WARNING, "Placeholders not registered", failure); }
         registerCommands();
@@ -140,11 +147,10 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
     }
 
     /** Every switch in /vadmin features with its one-line description in the admin's language. */
-    private void declareSwitches() {
-        var config = core.settings().config();
+    static void declareSwitches(Vystorm.vystorm_core._uiMethods.settings.ConfigEditorInterface config, org.bukkit.plugin.Plugin plugin, Lang lang) {
         for (Feature feature : Feature.values()) {
-            config.feature(this, feature.path, null, lang.ref(feature.description()));
-            if (feature.needsRestart()) config.activation(this, feature.path, Vystorm.vystorm_core._uiMethods.settings.SettingPolicy.Activation.RESTART);
+            config.feature(plugin, feature.path, lang.ref(feature.label()), lang.ref(feature.description()));
+            if (feature.needsRestart()) config.activation(plugin, feature.path, Vystorm.vystorm_core._uiMethods.settings.SettingPolicy.Activation.RESTART);
         }
     }
 
@@ -166,8 +172,28 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
         }, key -> lang == null ? key : lang.ref(key));
     }
 
-    private void load() {
+    /** The YAML error of config.yml found by the last load ("line L, column C: ..."), null when it parsed. */
+    private String configProblem;
+    private boolean configLoaded;
+
+    /**
+     * Reads config.yml for start and reload. A file with a YAML error is left byte-identical and the error logged once;
+     * false is returned so that a reload keeps the last good settings (Bukkit would hand back the jar defaults).
+     */
+    boolean readConfig() {
+        configProblem = YamlCheck.problem(new java.io.File(getDataFolder(), "config.yml"));
+        if (configProblem != null) {
+            getLogger().severe("config.yml has a YAML error at " + configProblem + ". The file was left unchanged; "
+                    + (configLoaded ? "the last working settings stay in use." : "the default settings are used.") + " Fix it and run /paddock reload.");
+            return false;
+        }
         reloadConfig();
+        return true;
+    }
+
+    private void load() {
+        if (!readConfig() && configLoaded) return;
+        configLoaded = true;
         Feature.Switches before = switches;
         switches = Feature.Switches.read(getConfig());
         if (lang != null) lang.reload();
@@ -497,7 +523,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
     }
 
     void openStable(Player player, String search, int page, StablePage.Sort sort) {
-        if (off(player, Feature.STABLE, Feature.STABLE_MENU)) return;
+        if (off(player, Feature.STABLE_MENU) || needs(player, Feature.STABLE)) return;
         if (!player.hasPermission("vystormpaddock.use")) { lang.send(player, "denied"); return; }
         if (panels != null && panels.openStable(player, search, page, sort)) return;
         openStableChest(player, search, page, sort);
@@ -563,7 +589,8 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
                         .executes(ctx -> p.rename(ctx.player(), new String[]{"rename", ctx.get("name")})))
                 .sub("store", s -> gate(s, p, Feature.STABLE).permission("vystormpaddock.use").playerOnly().executes(ctx -> p.store(ctx.player())))
                 .sub("list", s -> gate(s, p, Feature.STABLE).permission("vystormpaddock.use").playerOnly().executes(ctx -> p.list(ctx.player())))
-                .sub("stable", s -> gate(gate(s, p, Feature.STABLE), p, Feature.STABLE_MENU).permission("vystormpaddock.use").playerOnly().arg(Arg.greedy("search").optional())
+                // stable and course are listed while their own switch is on, so that they can name the switch they need
+                .sub("stable", s -> gate(s, p, Feature.STABLE_MENU).permission("vystormpaddock.use").playerOnly().arg(Arg.greedy("search").optional())
                         .executes(ctx -> {
                             if (ctx.get("search") == null) p.openStable(ctx.player());
                             else p.openStable(ctx.player(), ctx.get("search"), 0);
@@ -588,7 +615,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
                             return out;
                         }))
                         .executes(ctx -> p.race(ctx.player(), ctx.get("course"), ctx.keyword(ctx.get("course"), "stop") != null)))
-                .sub("course", s -> gate(gate(s, p, Feature.RACES), p, Feature.COURSES).permission("vystormpaddock.course").playerOnly()
+                .sub("course", s -> gate(s, p, Feature.COURSES).permission("vystormpaddock.course").playerOnly()
                         .sub("create", c -> c.arg(Arg.word("course")).executes(ctx -> p.course(ctx.player(), "create", ctx.get("course"), null)))
                         .sub("point", c -> c.arg(courseArg(p)).executes(ctx -> p.course(ctx.player(), "point", ctx.get("course"), null)))
                         .sub("undo", c -> c.arg(courseArg(p)).executes(ctx -> p.course(ctx.player(), "undo", ctx.get("course"), null)))
@@ -625,6 +652,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
 
     void reload(CommandSender sender) {
         load();
+        if (configProblem != null) { lang.send(sender, "config-broken", "file", "config.yml", "problem", configProblem); return; }
         lang.send(sender, "reloaded");
     }
 
@@ -753,6 +781,7 @@ public final class PaddockPlugin extends JavaPlugin implements Listener {
     /** {@code /paddock bet [rider beat|miss amount]}: without arguments lists open books. */
     void bet(Player player, String riderName, String sideText, String amountText) {
         if (!on(Feature.BETTING) || !getConfig().getBoolean(Feature.BETTING.path, true)) { lang.send(player, "feature-off"); return; }
+        if (needs(player, Feature.RACES)) return; // bets are placed on races
         var economy = economy();
         if (economy == null) { lang.send(player, "bet.no-economy"); return; }
         double cut = houseCut();

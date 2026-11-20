@@ -293,7 +293,8 @@ final class RaceTracker implements Listener {
 
     /** /paddock course create|point|undo|radius|reset|delete NAME */
     void course(Player player, String[] args) {
-        if (!enabled || !PaddockPlugin.enabled(plugin, Feature.COURSES)) { lang().send(player, "feature-off"); return; }
+        if (!PaddockPlugin.enabled(plugin, Feature.COURSES)) { lang().send(player, "feature-off"); return; }
+        if (!enabled) { lang().send(player, "feature-needs", "switch", Feature.RACES.path, "name", lang().plain(player, Feature.RACES.label())); return; }
         if (!player.hasPermission("vystormpaddock.course")) { lang().send(player, "denied"); return; }
         if (args.length < 3) { lang().send(player, "usage-course"); return; }
         String action = args[1].toLowerCase(Locale.ROOT), name = args[2];
